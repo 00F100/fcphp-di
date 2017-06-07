@@ -32,13 +32,6 @@ namespace FcPhp\Di\Test
 			self::ITEM_FAKE_CLASS_POPULATE => 'FcPhp\Di\Test\Mocks\ClassPopulateTest',
 		];
 
-		/**
-		 * Set up tests
-		 */
-		public function setUp()
-		{
-		}
-
 		public function testSetClassWithoutParamsAndDepends()
 		{
 			$alias = $this->alias[self::ITEM_NO_PARAM];
@@ -46,6 +39,22 @@ namespace FcPhp\Di\Test
 			$args = [
 				'class' => $className,
 				'singleton' => false,
+				'params' => [],
+				'depends' => []
+			];
+			$instance = new Di();
+			$this->assertTrue($instance->set($alias, $args));
+			$class = $instance->get($alias);
+			$this->assertEquals($className, get_class($class));
+		}
+
+		public function testSetClassSingleton()
+		{
+			$alias = $this->alias[self::ITEM_NO_PARAM];
+			$className = $this->classTests[self::ITEM_FAKE_ENTITY_TEST];
+			$args = [
+				'class' => $className,
+				'singleton' => true,
 				'params' => [],
 				'depends' => []
 			];
@@ -71,7 +80,7 @@ namespace FcPhp\Di\Test
 			];
 			$instance = new Di();
 			$this->assertTrue($instance->set($alias, $args));
-			$class = $this->get($alias);
+			$class = $instance->get($alias);
 			$this->assertEquals($className, get_class($class));
 			$params = $class->getParams();
 			$this->assertEquals('param 1', $params[0]);
@@ -107,9 +116,9 @@ namespace FcPhp\Di\Test
 				'depends' => []
 			];
 			$this->assertTrue($instance->set($alias2, $argsFake2));
-			$class1 = $this->get($alias1);
+			$class1 = $instance->get($alias1);
 			$this->assertEquals($className1, get_class($class1));
-			$class2 = $this->get($alias2);
+			$class2 = $instance->get($alias2);
 			$this->assertEquals($className2, get_class($class2));
 		}
 
@@ -155,14 +164,14 @@ namespace FcPhp\Di\Test
 		}
 
 		/**
-	     * @expectedException     ClassEmptyException
-	     * @expectedExceptionCode 404
+	     * @expectedException     FcPhp\Di\Exceptions\ClassEmptyException
+	     * @expectedExceptionCode 500
 	     */
 		public function testClassEmptyException()
 		{
 			$alias = $this->alias[self::ITEM_NO_PARAM];
 			$args = [
-				'class' => null,
+				'class' => '',
 				'singleton' => false,
 				'params' => [],
 				'depends' => []
@@ -172,7 +181,7 @@ namespace FcPhp\Di\Test
 		}
 
 		/**
-	     * @expectedException     ClassNotFoundException
+	     * @expectedException     FcPhp\Di\Exceptions\ClassNotFoundException
 	     * @expectedExceptionCode 404
 	     */
 		public function testClassNotFoundException()
@@ -189,17 +198,7 @@ namespace FcPhp\Di\Test
 		}
 
 		/**
-	     * @expectedException     ClassNotExistsException
-	     * @expectedExceptionCode 404
-	     */
-		public function testClassNotExistsException()
-		{
-			$instance = new Di();
-			$class = $instance->get('alias-not-exists');
-		}
-
-		/**
-	     * @expectedException     AliasEmptyException
+	     * @expectedException     FcPhp\Di\Exceptions\AliasEmptyException
 	     * @expectedExceptionCode 404
 	     */
 		public function testAliasEmptyException()
@@ -216,8 +215,8 @@ namespace FcPhp\Di\Test
 		}
 
 		/**
-	     * @expectedException     ArgsNotFoundException
-	     * @expectedExceptionCode 404
+	     * @expectedException     FcPhp\Di\Exceptions\ArgsNotFoundException
+	     * @expectedExceptionCode 500
 	     */
 		public function testArgsNotFoundException()
 		{
@@ -227,7 +226,7 @@ namespace FcPhp\Di\Test
 		}
 
 		/**
-	     * @expectedException     ArgsIncompleteException
+	     * @expectedException     FcPhp\Di\Exceptions\ArgsIncompleteException
 	     * @expectedExceptionCode 500
 	     */
 		public function testArgsIncompleteException()
@@ -238,6 +237,89 @@ namespace FcPhp\Di\Test
 			];
 			$instance = new Di();
 			$instance->set('new-instance', $args);
+		}
+
+		/**
+	     * @expectedException     FcPhp\Di\Exceptions\ClassNotExistsException
+	     * @expectedExceptionCode 404
+	     */
+		public function testClassNotExistsGetException()
+		{
+			$instance = new Di();
+			$class = $instance->get('alias-not-exists');
+		}
+
+		/**
+	     * @expectedException     FcPhp\Di\Exceptions\ClassHasEmptyException
+	     * @expectedExceptionCode 500
+	     */
+		public function testClassNotExistsGetEmptyException()
+		{
+			$instance = new Di();
+			$class = $instance->get('');
+		}
+
+		/**
+	     * @expectedException     FcPhp\Di\Exceptions\ClassNotExistsException
+	     * @expectedExceptionCode 404
+	     */
+		public function testClassNotExistsGetNewException()
+		{
+			$instance = new Di();
+			$class = $instance->getNew('alias-not-exists');
+		}
+
+		/**
+	     * @expectedException     FcPhp\Di\Exceptions\ClassNotExistsException
+	     * @expectedExceptionCode 404
+	     */
+		public function testClassNotExistsGetNewArgsException()
+		{
+			$args = [
+				'param 1',
+				'param 2',
+				'param 3'
+			];
+			$instance = new Di();
+			$class = $instance->getNewArgs('alias-not-exists', $args);
+		}
+
+		/**
+	     * @expectedException     FcPhp\Di\Exceptions\ArgsIncompleteException
+	     * @expectedExceptionCode 500
+	     */
+		public function testGetNewArgsHasEmpty()
+		{
+			$alias = $this->alias[self::ITEM_NO_PARAM];
+			$className = $this->classTests[self::ITEM_FAKE_ENTITY_TEST];
+			$args = [
+				'class' => $className,
+				'singleton' => false,
+				'params' => [],
+				'depends' => []
+			];
+			$instance = new Di();
+			$this->assertTrue($instance->set($alias, $args));
+			$class = $instance->getNewArgs($alias, []);
+		}
+
+		/**
+	     * @expectedException     FcPhp\Di\Exceptions\DuplicateClassException
+	     * @expectedExceptionCode 500
+	     */
+		public function testDuplicateClassException()
+		{
+			$alias = $this->alias[self::ITEM_NO_PARAM];
+			$className = $this->classTests[self::ITEM_FAKE_ENTITY_TEST];
+			$args = [
+				'class' => $className,
+				'singleton' => false,
+				'params' => [],
+				'depends' => []
+			];
+			$instance = new Di();
+			$instance->set($alias, $args);
+			$instance->set($alias, $args);
 		}
 	}
 }
