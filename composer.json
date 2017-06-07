@@ -1,0 +1,28 @@
+{
+    "name": "00f100/fcphp-di",
+    "type": "package",
+    "version": "0.1.0",
+    "description": "Dependency Injection 4 FcPHP",
+    "keywords": ["dependency", "injection", "di", "php", "fcphp"],
+    "homepage": "https://github.com/00f100/fcphp-di",
+    "authors": [
+        {
+            "name": "João Moraes",
+            "email": "joaomoraesbr@gmail.com",
+            "homepage": "https://github.com/00f100"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "00f100/phpdbug": "*",
+        "phpunit/phpunit": "6.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "FcPhp\\Di\\": "src/",
+            "FcPhp\\Di\\Test\\": "tests/"
+        }
+    }
+}
