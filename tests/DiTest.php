@@ -153,5 +153,91 @@ namespace FcPhp\Di\Test
 			$this->assertEquals('param 2', $params[1]);
 			$this->assertEquals('param 3', $params[2]);
 		}
+
+		/**
+	     * @expectedException     ClassEmptyException
+	     * @expectedExceptionCode 404
+	     */
+		public function testClassEmptyException()
+		{
+			$alias = $this->alias[self::ITEM_NO_PARAM];
+			$args = [
+				'class' => null,
+				'singleton' => false,
+				'params' => [],
+				'depends' => []
+			];
+			$instance = new Di();
+			$instance->set($alias, $args);
+		}
+
+		/**
+	     * @expectedException     ClassNotFoundException
+	     * @expectedExceptionCode 404
+	     */
+		public function testClassNotFoundException()
+		{
+			$alias = $this->alias[self::ITEM_NO_PARAM];
+			$args = [
+				'class' => 'Class\Not\Found',
+				'singleton' => false,
+				'params' => [],
+				'depends' => []
+			];
+			$instance = new Di();
+			$instance->set($alias, $args);
+		}
+
+		/**
+	     * @expectedException     ClassNotExistsException
+	     * @expectedExceptionCode 404
+	     */
+		public function testClassNotExistsException()
+		{
+			$instance = new Di();
+			$class = $instance->get('alias-not-exists');
+		}
+
+		/**
+	     * @expectedException     AliasEmptyException
+	     * @expectedExceptionCode 404
+	     */
+		public function testAliasEmptyException()
+		{
+			$className = $this->classTests[self::ITEM_FAKE_ENTITY_TEST];
+			$args = [
+				'class' => $className,
+				'singleton' => false,
+				'params' => [],
+				'depends' => []
+			];
+			$instance = new Di();
+			$instance->set('', $args);
+		}
+
+		/**
+	     * @expectedException     ArgsNotFoundException
+	     * @expectedExceptionCode 404
+	     */
+		public function testArgsNotFoundException()
+		{
+			$instance = new Di();
+			$instance->set('new-instance');
+			$instance->set('new-instance', []);
+		}
+
+		/**
+	     * @expectedException     ArgsIncompleteException
+	     * @expectedExceptionCode 500
+	     */
+		public function testArgsIncompleteException()
+		{
+			$className = $this->classTests[self::ITEM_FAKE_ENTITY_TEST];
+			$args = [
+				'class' => $className,
+			];
+			$instance = new Di();
+			$instance->set('new-instance', $args);
+		}
 	}
 }

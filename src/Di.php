@@ -8,9 +8,13 @@ namespace FcPhp\Di
 {
 	use FcPhp\Di\Interfaces\IDi;
 
-	class Di implements IDi {
-		
-		public function set($alias, array $args)
+	class Di implements IDi
+	{
+		private $defaults = [
+			'class' => '',
+		];
+
+		public function set($alias, array $args = [])
 		{
 
 		}
