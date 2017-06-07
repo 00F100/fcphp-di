@@ -7,9 +7,8 @@
 namespace FcPhp\Di
 {
 	use Exception;
-	use ReflectionClass;
-	use ReflectionException;
 	use FcPhp\Di\Interfaces\IDi;
+	use FcPhp\Di\ReflectionClassWrapper;
 	use FcPhp\Di\Exceptions\AliasEmptyException;
 	use FcPhp\Di\Exceptions\ArgsNotFoundException;
 	use FcPhp\Di\Exceptions\DuplicateClassException;
@@ -20,7 +19,7 @@ namespace FcPhp\Di
 	use FcPhp\Di\Exceptions\ClassEmptyException;
 	use FcPhp\Di\Exceptions\FailToLoadClassException;
 
-	class Di implements IDi
+	class Di extends ReflectionClassWrapper implements IDi
 	{
 		/**
 		 * List of params and types acceptable
@@ -156,26 +155,6 @@ namespace FcPhp\Di
 			$args = $this->classes[$alias];
 			$args['params'] = $params;
 			return $this->createInstance($args['class'], $args['params']);
-		}
-
-		/**
-		 * Method to create a instance of class
-		 *
-		 * @param string $alias Alias of class
-		 * @param array $params New params to classe
-		 * @return mixed
-		 *
-		 * @throws FcPhp\Di\Interfaces\FailToLoadClassException
-		 */
-		private function createInstance($class, $params)
-		{
-			try {
-				$class = new ReflectionClass($class);
-				$instance = $class->newInstanceArgs($params);
-				return $instance;
-			} catch(ReflectionException $e) {
-				throw new FailToLoadClassException($e);
-			}
 		}
 
 		/**
