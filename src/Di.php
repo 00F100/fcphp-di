@@ -8,6 +8,7 @@ namespace FcPhp\Di
 {
 	use Exception;
 	use ReflectionClass;
+	use ReflectionException;
 	use FcPhp\Di\Interfaces\IDi;
 	use FcPhp\Di\Exceptions\AliasEmptyException;
 	use FcPhp\Di\Exceptions\ArgsNotFoundException;
@@ -17,9 +18,14 @@ namespace FcPhp\Di
 	use FcPhp\Di\Exceptions\ClassNotExistsException;
 	use FcPhp\Di\Exceptions\ClassNotFoundException;
 	use FcPhp\Di\Exceptions\ClassEmptyException;
+	use FcPhp\Di\Exceptions\FailToLoadClassException;
 
 	class Di implements IDi
 	{
+		/**
+		 * List of params and types acceptable
+		 * @var array
+		 */
 		private $defaultsTypes = [
 			'class' => 'string',
 			'singleton' => 'boolean',
@@ -27,10 +33,32 @@ namespace FcPhp\Di
 			'depends' => 'array'
 		];
 
+		/**
+		 * List of classes in cache
+		 * @var array
+		 */
 		private $classes = [];
 
+		/**
+		 * List of instances in cache
+		 * @var array
+		 */
 		private $instances = [];
 
+		/**
+		 * Method to configure class
+		 *
+		 * @param string $alias Alias of class
+		 * @param array $args List of params to class
+		 * @return boolean
+		 *
+		 * @throws FcPhp\Di\Interfaces\AliasEmptyException
+		 * @throws FcPhp\Di\Interfaces\ArgsNotFoundException
+		 * @throws FcPhp\Di\Interfaces\DuplicateClassException
+		 * @throws FcPhp\Di\Interfaces\ArgsIncompleteException
+		 * @throws FcPhp\Di\Interfaces\ClassEmptyException
+		 * @throws FcPhp\Di\Interfaces\ClassNotFoundException
+		 */
 		public function set($alias = null, array $args = [])
 		{
 			if(empty($alias)){
@@ -56,6 +84,15 @@ namespace FcPhp\Di
 			return true;
 		}
 
+		/**
+		 * Method to get class with singleton (if configured)
+		 *
+		 * @param string $alias Alias of class
+		 * @return mixed
+		 *
+		 * @throws FcPhp\Di\Interfaces\ClassHasEmptyException
+		 * @throws FcPhp\Di\Interfaces\ClassNotExistsException
+		 */
 		public function get($alias = null)
 		{
 			if(empty($alias)){
@@ -72,7 +109,16 @@ namespace FcPhp\Di
 			}
 		}
 
-		public function getNew($alias)
+		/**
+		 * Method to get new instance of class (no new params)
+		 *
+		 * @param string $alias Alias of class
+		 * @return mixed
+		 *
+		 * @throws FcPhp\Di\Interfaces\ClassHasEmptyException
+		 * @throws FcPhp\Di\Interfaces\ClassNotExistsException
+		 */
+		public function getNew($alias = null)
 		{
 			if(empty($alias)){
 				throw new ClassHasEmptyException();
@@ -85,7 +131,18 @@ namespace FcPhp\Di
 			
 		}
 
-		public function getNewArgs($alias, array $params = [])
+		/**
+		 * Method to get new instance of class (no new params)
+		 *
+		 * @param string $alias Alias of class
+		 * @param array $params New params to classe
+		 * @return mixed
+		 *
+		 * @throws FcPhp\Di\Interfaces\ClassHasEmptyException
+		 * @throws FcPhp\Di\Interfaces\ClassNotExistsException
+		 * @throws FcPhp\Di\Interfaces\ArgsIncompleteException
+		 */
+		public function getNewArgs($alias = null, array $params = [])
 		{
 			if(empty($alias)){
 				throw new ClassHasEmptyException();
@@ -101,13 +158,32 @@ namespace FcPhp\Di
 			return $this->createInstance($args['class'], $args['params']);
 		}
 
+		/**
+		 * Method to create a instance of class
+		 *
+		 * @param string $alias Alias of class
+		 * @param array $params New params to classe
+		 * @return mixed
+		 *
+		 * @throws FcPhp\Di\Interfaces\FailToLoadClassException
+		 */
 		private function createInstance($class, $params)
 		{
-			$class = new ReflectionClass($class);
-			$instance = $class->newInstanceArgs($params);
-			return $instance;
+			try {
+				$class = new ReflectionClass($class);
+				$instance = $class->newInstanceArgs($params);
+				return $instance;
+			} catch(ReflectionException $e) {
+				throw new FailToLoadClassException($e);
+			}
 		}
 
+		/**
+		 * Method to return singleton instance of class
+		 *
+		 * @param string $alias Alias of class
+		 * @return mixed
+		 */
 		private function getSingleton($alias)
 		{
 			if(!isset($this->instances[$alias])){
@@ -116,6 +192,12 @@ namespace FcPhp\Di
 			return $this->instances[$alias];
 		}
 
+		/**
+		 * Method to validate args of class on set
+		 *
+		 * @param array $args List of args to configure class
+		 * @return boolean
+		 */
 		private function validateArgs(array $args)
 		{
 			foreach($this->defaultsTypes as $param => $value) {
