@@ -1,6 +1,6 @@
 <?php
 /**
- * Fast Create PHP - Dependency Injection
+ * Fast Create PHP - Reflection Class Wrapper
  *
  * @author João Moraes <joaomoraesbr@gmail.com>
  */

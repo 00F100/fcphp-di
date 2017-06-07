@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Fast Create PHP - Alias has empty
+ *
+ * @author João Moraes <joaomoraesbr@gmail.com>
+ */
 namespace FcPhp\Di\Exceptions
 {
 	use Exception;

@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Fast Create PHP - Class not found
+ *
+ * @author João Moraes <joaomoraesbr@gmail.com>
+ */
 namespace FcPhp\Di\Exceptions
 {
 	use Exception;

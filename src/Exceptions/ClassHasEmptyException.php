@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Fast Create PHP - Class has empty
+ *
+ * @author João Moraes <joaomoraesbr@gmail.com>
+ */
 namespace FcPhp\Di\Exceptions
 {
 	use Exception;
@@ -8,7 +12,7 @@ namespace FcPhp\Di\Exceptions
 	{
 		public function __construct()
 		{
-			parent::__construct('Args incomplete!', 500);
+			parent::__construct('Class has empty!', 500);
 		}
 	}
 }

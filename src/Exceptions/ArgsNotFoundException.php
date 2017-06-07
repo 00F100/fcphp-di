@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Fast Create PHP - Args not found
+ *
+ * @author João Moraes <joaomoraesbr@gmail.com>
+ */
 namespace FcPhp\Di\Exceptions
 {
 	use Exception;
@@ -8,7 +12,7 @@ namespace FcPhp\Di\Exceptions
 	{
 		public function __construct()
 		{
-			parent::__construct('Arguments has empty!', 500);
+			parent::__construct('Arguments not found!', 500);
 		}
 	}
 }
