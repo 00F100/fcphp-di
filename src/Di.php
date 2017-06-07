@@ -103,9 +103,6 @@ namespace FcPhp\Di
 
 		private function createInstance($class, $params)
 		{
-			if(!class_exists($class)){
-				debug($class);
-			}
 			$class = new ReflectionClass($class);
 			$instance = $class->newInstanceArgs($params);
 			return $instance;

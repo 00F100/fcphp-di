@@ -260,6 +260,26 @@ namespace FcPhp\Di\Test
 		}
 
 		/**
+	     * @expectedException     FcPhp\Di\Exceptions\ClassHasEmptyException
+	     * @expectedExceptionCode 500
+	     */
+		public function testClassNotExistsGetNewEmptyException()
+		{
+			$instance = new Di();
+			$class = $instance->getNew('');
+		}
+
+		/**
+	     * @expectedException     FcPhp\Di\Exceptions\ClassHasEmptyException
+	     * @expectedExceptionCode 500
+	     */
+		public function testClassNotExistsGetArgsNewEmptyException()
+		{
+			$instance = new Di();
+			$class = $instance->getNewArgs('', []);
+		}
+
+		/**
 	     * @expectedException     FcPhp\Di\Exceptions\ClassNotExistsException
 	     * @expectedExceptionCode 404
 	     */
