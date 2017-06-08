@@ -45,6 +45,30 @@ namespace FcPhp\Di
 		private $instances = [];
 
 		/**
+		 * Function to execute before instantiating
+		 * @var mixed
+		 */
+		private $beforeInstantiating;
+
+		/**
+		 * Function to execute after instantiating
+		 * @var mixed
+		 */
+		private $afterInstantiating;
+
+		/**
+		 * Function to execute before execute method
+		 * @var mixed
+		 */
+		private $beforeCallMethod;
+
+		/**
+		 * Function to execute after execute method
+		 * @var mixed
+		 */
+		private $afterCallMethod;
+
+		/**
 		 * Method to configure class
 		 *
 		 * @param string $alias Alias of class
@@ -197,10 +221,18 @@ namespace FcPhp\Di
 		 * @param string $alias Alias of class
 		 * @param array $params New params to classe
 		 * @return FcPhp\Di\Interfaces\IInstance
+		 *
+		 * @throws FcPhp\Di\Interfaces\ClassEmptyException
 		 */
 		private function createInstance($class, $params)
 		{
-			return new Instance($class, $params);
+			$beforeInstantiating = function(){
+
+			};
+			$afterInstantiating = function(){
+
+			};
+			return new Instance($class, $params, $beforeInstantiating, $afterInstantiating);
 		}
 	}
 }

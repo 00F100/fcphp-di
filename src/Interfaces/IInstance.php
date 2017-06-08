@@ -7,7 +7,7 @@
 namespace FcPhp\Di\Interfaces
 {
 	interface IInstance {
-		public function __construct($class = null, array $params = []);
+		public function __construct($class = null, array $params = [], $callbacks = null);
 		public function __call($method, array $args = []);
 		public function getClass();
 		public function getClassName();
