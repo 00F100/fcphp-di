@@ -4,11 +4,12 @@
  *
  * @author João Moraes <joaomoraesbr@gmail.com>
  */
-namespace FcPhp\Di\Test
+namespace FcPhp\Di\Test\Unit
 {
 	use PHPUnit\Framework\TestCase;
 	use FcPhp\Di\Di;
 	use FcPhp\Di\Interfaces\IDi;
+	use FcPhp\Di\Interfaces\IInstance;
 
 	class DiTest extends TestCase
 	{
@@ -28,8 +29,8 @@ namespace FcPhp\Di\Test
 			self::ITEM_PARAM_FAKE_POPULATE => 'new-mock-param-fake-populate',
 		];
 		private $classTests = [
-			self::ITEM_FAKE_ENTITY_TEST => 'FcPhp\Di\Test\Mocks\EntityTest',
-			self::ITEM_FAKE_CLASS_POPULATE => 'FcPhp\Di\Test\Mocks\ClassPopulateTest',
+			self::ITEM_FAKE_ENTITY_TEST => 'FcPhp\Di\Test\Unit\Mocks\EntityTest',
+			self::ITEM_FAKE_CLASS_POPULATE => 'FcPhp\Di\Test\Unit\Mocks\ClassPopulateTest',
 		];
 
 		public function testSetClassWithoutParamsAndDepends()
@@ -45,6 +46,8 @@ namespace FcPhp\Di\Test
 			$instance = new Di();
 			$this->assertTrue($instance->set($alias, $args));
 			$class = $instance->get($alias);
+			$this->assertTrue($class instanceof IInstance);
+			$class = $class->getClass();
 			$this->assertEquals($className, get_class($class));
 		}
 
@@ -61,6 +64,8 @@ namespace FcPhp\Di\Test
 			$instance = new Di();
 			$this->assertTrue($instance->set($alias, $args));
 			$class = $instance->get($alias);
+			$this->assertTrue($class instanceof IInstance);
+			$class = $class->getClass();
 			$this->assertEquals($className, get_class($class));
 		}
 
@@ -81,7 +86,6 @@ namespace FcPhp\Di\Test
 			$instance = new Di();
 			$this->assertTrue($instance->set($alias, $args));
 			$class = $instance->get($alias);
-			$this->assertEquals($className, get_class($class));
 			$params = $class->getParams();
 			$this->assertEquals('param 1', $params[0]);
 			$this->assertEquals('param 2', $params[1]);
@@ -117,8 +121,13 @@ namespace FcPhp\Di\Test
 			];
 			$this->assertTrue($instance->set($alias2, $argsFake2));
 			$class1 = $instance->get($alias1);
+			$this->assertTrue($class1 instanceof IInstance);
+			$class1 = $class1->getClass();
 			$this->assertEquals($className1, get_class($class1));
+
 			$class2 = $instance->get($alias2);
+			$this->assertTrue($class2 instanceof IInstance);
+			$class2 = $class2->getClass();
 			$this->assertEquals($className2, get_class($class2));
 		}
 
@@ -135,6 +144,8 @@ namespace FcPhp\Di\Test
 			$instance = new Di();
 			$this->assertTrue($instance->set($alias, $args));
 			$class = $instance->getNew($alias);
+			$this->assertTrue($class instanceof IInstance);
+			$class = $class->getClass();
 			$this->assertEquals($className, get_class($class));
 		}
 
@@ -156,7 +167,6 @@ namespace FcPhp\Di\Test
 			$instance = new Di();
 			$this->assertTrue($instance->set($alias, $args));
 			$class = $instance->getNewArgs($alias, $newArgs);
-			$this->assertEquals($className, get_class($class));
 			$params = $class->getParams();
 			$this->assertEquals('param 1', $params[0]);
 			$this->assertEquals('param 2', $params[1]);

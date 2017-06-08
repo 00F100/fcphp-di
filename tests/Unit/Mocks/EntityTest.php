@@ -4,7 +4,7 @@
  *
  * @author João Moraes <joaomoraesbr@gmail.com>
  */
-namespace FcPhp\Di\Test\Mocks
+namespace FcPhp\Di\Test\Unit\Mocks
 {
 	class EntityTest
 	{

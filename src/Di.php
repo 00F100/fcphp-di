@@ -7,8 +7,8 @@
 namespace FcPhp\Di
 {
 	use Exception;
+	use FcPhp\Di\Instance;
 	use FcPhp\Di\Interfaces\IDi;
-	use FcPhp\Di\ReflectionClassWrapper;
 	use FcPhp\Di\Exceptions\AliasEmptyException;
 	use FcPhp\Di\Exceptions\ArgsNotFoundException;
 	use FcPhp\Di\Exceptions\DuplicateClassException;
@@ -19,7 +19,7 @@ namespace FcPhp\Di
 	use FcPhp\Di\Exceptions\ClassEmptyException;
 	use FcPhp\Di\Exceptions\FailToLoadClassException;
 
-	class Di extends ReflectionClassWrapper implements IDi
+	class Di implements IDi
 	{
 		/**
 		 * List of params and types acceptable
@@ -189,6 +189,18 @@ namespace FcPhp\Di
 				}
 			}
 			return true;
+		}
+
+		/**
+		 * Method to create a instance of class
+		 *
+		 * @param string $alias Alias of class
+		 * @param array $params New params to classe
+		 * @return FcPhp\Di\Interfaces\IInstance
+		 */
+		private function createInstance($class, $params)
+		{
+			return new Instance($class, $params);
 		}
 	}
 }
