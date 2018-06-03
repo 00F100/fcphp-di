@@ -1,7 +1,7 @@
 {
     "name": "00f100/fcphp-di",
     "type": "package",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "Dependency Injection for FcPHP",
     "keywords": ["dependency", "injection", "di", "php", "fcphp"],
     "homepage": "https://github.com/00f100/fcphp-di",
@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0"
+        "php": "7.2.*"
     },
     "require-dev": {
         "00f100/phpdbug": "*",
