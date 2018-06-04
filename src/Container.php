@@ -6,6 +6,7 @@ namespace FcPhp\Di
 	use FcPhp\Di\Interfaces\IInstance;
 	use FcPhp\Di\Interfaces\IContainer;
 	use ReflectionClass;
+	use ReflectionMethod;
 
 	class Container implements IContainer
 	{
@@ -22,8 +23,32 @@ namespace FcPhp\Di
 		public function getClass()
 		{
 			if(!$this->classInstance) {
+				$args = array_merge($this->instance->getArgs(), $this->args);
+				foreach($args as $index => $value) {
+					if($value instanceof IContainer) {
+						$args[$index] = $value->getClass();
+					}
+				}
+				$method = new ReflectionMethod($this->instance->getNamespace(), '__construct');
+				$parameters = $method->getParameters();
+				$params = [];
+				if(count($parameters) > 0) {
+					foreach($parameters as $param) {
+						$params[] = $param->getName();
+					}
+				}
+				$argsClass = [];
+				if(count($params) > 0) {
+					foreach($params as $param) {
+						if(isset($args[$param])) {
+							$argsClass[] = $args[$param];
+						}else{
+							$argsClass[] = null;
+						}
+					}
+				}
 				$class = new ReflectionClass($this->instance->getNamespace());
-				$instance = $class->newInstanceArgs(array_merge($this->instance->getArgs(), $this->args));
+				$instance = $class->newInstanceArgs($argsClass);
 				$this->register($instance);
 			}
 

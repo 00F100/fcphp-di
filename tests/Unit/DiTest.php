@@ -41,7 +41,7 @@ namespace FcPHP\Di\Test\Unit
 
 				},
 				'afterMake' => function(string $id, array $args, IInstance $instance, IContainer $container, $class) {
-					
+
 				}
 			]);
 
@@ -116,6 +116,13 @@ namespace FcPHP\Di\Test\Unit
 			$this->assertEquals($container->getClass()->getValue(), $value);
 			$container2 = $this->di->get('ClassTestNonSingleton');
 			$this->assertEquals($container2->getClass()->getValue(), null);
+		}
+
+		public function testInjectDependency()
+		{
+			$class = $this->di->make('ClassTest', ['param1' => $this->di->get('ClassTest', ['param1' => $this->di->get('ClassTest')])]);
+			$this->assertTrue($class->getParam1() instanceof ClassTest);
+			$this->assertTrue($class->getParam1()->getParam1() instanceof ClassTest);
 		}
 
 		/**

@@ -7,7 +7,7 @@ namespace FcPHP\Di\Test\Unit\Mock
 		private $param1 = false;
 		private $value;
 
-		public function __construct($param1)
+		public function __construct($param1 = null)
 		{
 			$this->param1 = $param1;
 		}

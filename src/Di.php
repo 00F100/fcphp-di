@@ -227,37 +227,49 @@ namespace FcPhp\Di
 		public function beforeSet(string $id, string $namespace, array $args, bool $singleton)
 		{
 			$event = $this->beforeSet;
-			$event($id, $namespace, $args, $singleton);
+			if(gettype($event) == 'object') {
+				$event($id, $namespace, $args, $singleton);
+			}
 		}
 
 		public function afterSet(string $id, string $namespace, array $args, bool $singleton, IInstance $instance)
 		{
 			$event = $this->beforeSet;
-			$event($id, $namespace, $args, $singleton, $instance);
+			if(gettype($event) == 'object') {
+				$event($id, $namespace, $args, $singleton, $instance);
+			}
 		}
 
 		public function beforeGet(string $id, array $args)
 		{
 			$event = $this->beforeGet;
-			$event($id, $args);
+			if(gettype($event) == 'object') {
+				$event($id, $args);
+			}
 		}
 
 		public function afterGet(string $id, array $args, IInstance $instance, IContainer $container)
 		{
 			$event = $this->afterGet;
-			$event($id, $args, $instance, $container);
+			if(gettype($event) == 'object') {
+				$event($id, $args, $instance, $container);
+			}
 		}
 
 		public function beforeMake(string $id, array $args)
 		{
 			$event = $this->beforeMake;
-			$event($id, $args);
+			if(gettype($event) == 'object') {
+				$event($id, $args);
+			}
 		}
 
 		public function afterMake(string $id, array $args, IInstance $instance, IContainer $container, $class)
 		{
 			$event = $this->afterMake;
-			$event($id, $args, $instance, $container, $class);
+			if(gettype($event) == 'object') {
+				$event($id, $args, $instance, $container, $class);
+			}
 		}
 	}
 }
