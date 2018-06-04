@@ -21,9 +21,11 @@ namespace FcPhp\Di
 
 		public function getClass()
 		{
-			$class = new ReflectionClass($this->instance->getNamespace());
-			$instance = $class->newInstanceArgs(array_merge($this->instance->getArgs(), $this->args));
-			$this->register($instance);
+			if(!$this->classInstance) {
+				$class = new ReflectionClass($this->instance->getNamespace());
+				$instance = $class->newInstanceArgs(array_merge($this->instance->getArgs(), $this->args));
+				$this->register($instance);
+			}
 
 			// process setters
 
@@ -32,9 +34,7 @@ namespace FcPhp\Di
 
 		private function register($instance) :IContainer
 		{
-			if(!$this->classInstance) {
-				$this->classInstance = $instance;
-			}
+			$this->classInstance = $instance;
 			return $this;
 		}
 	}

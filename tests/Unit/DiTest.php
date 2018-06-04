@@ -8,6 +8,12 @@ namespace FcPHP\Di\Test\Unit
 	use PHPUnit\Framework\TestCase;
 	use FcPhp\Di\Interfaces\IContainer;
 
+	use FcPhp\Di\Factories\ContainerFactory;
+	use FcPhp\Di\Factories\DiFactory;
+	use FcPhp\Di\Factories\InstanceFactory;
+
+	use FcPhp\Di\Interfaces\IInstance;
+
 	class DiTest extends TestCase
 	{
 		public $di;
@@ -15,8 +21,30 @@ namespace FcPHP\Di\Test\Unit
 		public function setUp()
 		{
 			if(!$this->di instanceof Di) {
-				$this->di = Di::getInstance();
+				$this->di = Di::getInstance(new DiFactory(), new ContainerFactory(), new InstanceFactory());
 			}
+
+			$this->di->event([
+				'beforeSet' => function(string $id, string $namespace, array $args, bool $singleton) {
+
+				},
+				'afterSet' => function(string $id, string $namespace, array $args, bool $singleton, IInstance $instance) {
+
+				},
+				'beforeGet' => function(string $id, array $args = []) {
+
+				},
+				'afterGet' => function(string $id, array $args, IInstance $instance, IContainer $container) {
+
+				},
+				'beforeMake' => function(string $id, array $args) {
+
+				},
+				'afterMake' => function(string $id, array $args, IInstance $instance, IContainer $container, $class) {
+					
+				}
+			]);
+
 		}
 
 		public function testConstruct()
@@ -37,11 +65,6 @@ namespace FcPHP\Di\Test\Unit
 		public function testSetGetNonSingletonContainer()
 		{
 			$this->assertTrue($this->di->getNonSingleton('ClassTest') instanceof IContainer);
-		}
-
-		public function testInstancesList()
-		{
-			$this->assertTrue(count($this->di->getInstances()) > 0);
 		}
 
 		public function testMakeSingletonClass()
