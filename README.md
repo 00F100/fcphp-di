@@ -6,11 +6,12 @@ Dependency Injection 4 FcPHP
 ```php
 <?php
 
+use FcPhp\Di\Di;
 use FcPhp\Di\Factories\ContainerFactory;
 use FcPhp\Di\Factories\DiFactory;
 use FcPhp\Di\Factories\InstanceFactory;
 
-$di = Di::getInstance(new DiFactory(), new ContainerFactory(), new InstanceFactory(), true);
+$di = Di::getInstance(new DiFactory(), new ContainerFactory(), new InstanceFactory());
 
 // class Example(string $foo)
 $di->set('Example', 'Namespace\To\Example', ['foo' => 'bar'], []);
