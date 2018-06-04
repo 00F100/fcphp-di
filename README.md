@@ -19,6 +19,6 @@ $di->set('Example', 'Namespace\To\Example', ['foo' => 'bar'], []);
 // class ExampleB(Namespace\To\Example $example)
 $di->set('ExampleB', 'Namespace\To\Class2', ['example' => $di->get('Example')]);
 
-$class = $di->make('ExampleB')->example->foo
+echo $di->make('ExampleB')->example->foo
 // Return: bar
 ```
