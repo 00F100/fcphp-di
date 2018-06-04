@@ -13,10 +13,12 @@ use FcPhp\Di\Factories\InstanceFactory;
 
 $di = Di::getInstance(new DiFactory(), new ContainerFactory(), new InstanceFactory());
 
-// class Example(string $foo)
+// class Example
+//          __construct(string $foo)
 $di->set('Example', 'Namespace\To\Example', ['foo' => 'bar'], []);
 
-// class ExampleB(Namespace\To\Example $example)
+// class ExampleB
+//          __construct(Namespace\To\Example $example)
 $di->set('ExampleB', 'Namespace\To\Class2', ['example' => $di->get('Example')]);
 
 echo $di->make('ExampleB')->example->foo
