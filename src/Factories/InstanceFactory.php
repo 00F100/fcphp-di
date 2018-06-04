@@ -7,9 +7,9 @@ namespace FcPhp\Di\Factories
 
 	class InstanceFactory implements IInstanceFactory
 	{
-		public function getInstance($namespace, $args, $singleton)
+		public function getInstance(string $namespace, array $args, array $setters, bool $singleton)
 		{
-			return new Instance($namespace, $args, $singleton);
+			return new Instance($namespace, $args, $setters, $singleton);
 		}
 	}
 }

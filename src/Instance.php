@@ -21,6 +21,8 @@ namespace FcPhp\Di
 		 */
 		private $singleton = true;
 
+		private $setters = [];
+
 		/**
 		 * Method to construct new instance
 		 *
@@ -28,11 +30,12 @@ namespace FcPhp\Di
 		 * @param array $args Args to construct new class
 		 * @param bool $singlegon Define if this class is singleton (or not)
 		 */
-		public function __construct($namespace, $args, $singleton)
+		public function __construct(string $namespace, array $args, array $setters, bool $singleton)
 		{
 			$this->namespace = $namespace;
 			$this->args = $args;
 			$this->singleton = $singleton;
+			$this->setters = $setters;
 		}
 
 		/**
@@ -74,6 +77,11 @@ namespace FcPhp\Di
 		public function getIsSingleton() :bool
 		{
 			return $this->singleton;
+		}
+
+		public function getSetters() :array
+		{
+			return $this->setters;
 		}
 
 	}

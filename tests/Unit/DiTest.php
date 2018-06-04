@@ -20,8 +20,9 @@ namespace FcPHP\Di\Test\Unit
 
 		public function setUp()
 		{
+
 			if(!$this->di instanceof Di) {
-				$this->di = Di::getInstance(new DiFactory(), new ContainerFactory(), new InstanceFactory());
+				$this->di = Di::getInstance(new DiFactory(), new ContainerFactory(), new InstanceFactory(), true);
 			}
 
 			$this->di->event([
@@ -31,7 +32,7 @@ namespace FcPHP\Di\Test\Unit
 				'afterSet' => function(string $id, string $namespace, array $args, bool $singleton, IInstance $instance) {
 
 				},
-				'beforeGet' => function(string $id, array $args = []) {
+				'beforeGet' => function(string $id, array $args) {
 
 				},
 				'afterGet' => function(string $id, array $args, IInstance $instance, IContainer $container) {
@@ -44,6 +45,10 @@ namespace FcPHP\Di\Test\Unit
 
 				}
 			]);
+
+			$this->di->event('beforeMake', function() {
+
+			});
 
 		}
 
@@ -60,6 +65,34 @@ namespace FcPHP\Di\Test\Unit
 			$this->di->set('ClassTest', 'FcPHP\Di\Test\Unit\Mock\ClassTest', $args);
 			$this->di->setNonSingleton('ClassTestNonSingleton', 'FcPHP\Di\Test\Unit\Mock\ClassTest', $args);
 			$this->assertTrue($this->di->get('ClassTest') instanceof IContainer);
+		}
+
+		public function testSetters()
+		{
+			$valueParam = 'valueParam1';
+			$args = [
+				'param1' => 'testeParam1'
+			];
+			$setters = [
+				'setValue' => $valueParam
+			];
+			$this->di->set('testSetters', 'FcPHP\Di\Test\Unit\Mock\ClassTest', $args, $setters);
+			$this->assertEquals($this->di->make('testSetters')->getValue(), $valueParam);
+		}
+
+		public function testSetteronGetNonSingleton()
+		{
+			$class = $this->di->getNonSingleton('ClassTest', [], ['setValue' => 'param111']);
+			$this->assertEquals($class->getClass()->getValue(), 'param111');
+		}
+
+		/**
+	     * @expectedException FcPhp\Di\Exceptions\ClassBusy
+	     */
+		public function testSetteronGetClassBusy()
+		{
+			$class = $this->di->get('ClassTest', [], ['setValue' => 'param111']);
+			$this->assertEquals($class->getClass()->getValue(), 'param111');
 		}
 
 		public function testSetGetNonSingletonContainer()

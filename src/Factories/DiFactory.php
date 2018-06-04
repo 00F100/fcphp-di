@@ -9,9 +9,9 @@ namespace FcPhp\Di\Factories
 
 	class DiFactory implements IDiFactory
 	{
-		public function getInstance(IContainerFactory $containerFactory, IInstanceFactory $instanceFactory)
+		public function getInstance(IContainerFactory $containerFactory, IInstanceFactory $instanceFactory, bool $register = false)
 		{
-			return new Di($containerFactory, $instanceFactory);
+			return new Di($containerFactory, $instanceFactory, $register);
 		}
 	}
 }

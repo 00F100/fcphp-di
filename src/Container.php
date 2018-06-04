@@ -12,12 +12,15 @@ namespace FcPhp\Di
 	{
 		private $instance;
 		private $args;
+		private $setters;
 		private $classInstance = false;
+		private $lock = false;
 
-		public function __construct(IInstance $instance, array $args = [])
+		public function __construct(IInstance $instance, array $args = [], array $setters = [])
 		{
 			$this->instance = $instance;
 			$this->args = $args;
+			$this->setters = $setters;
 		}
 
 		public function getClass()
@@ -29,6 +32,7 @@ namespace FcPhp\Di
 						$args[$index] = $value->getClass();
 					}
 				}
+
 				$method = new ReflectionMethod($this->instance->getNamespace(), '__construct');
 				$parameters = $method->getParameters();
 				$params = [];
@@ -49,7 +53,19 @@ namespace FcPhp\Di
 				}
 				$class = new ReflectionClass($this->instance->getNamespace());
 				$instance = $class->newInstanceArgs($argsClass);
+				$setters = array_merge($this->instance->getSetters(), $this->setters);
+				if(count($setters) > 0) {
+					foreach($setters as $method => $value) {
+						if(method_exists($instance, $method)) {
+							if(!is_array($value))
+								$value = [$value];
+
+							call_user_func_array([$instance, $method], $value);
+						}
+					}
+				}
 				$this->register($instance);
+				$this->lock = true;
 			}
 
 			// process setters

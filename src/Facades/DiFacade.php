@@ -50,9 +50,9 @@ namespace FcPHP\Di\Facades
 		 * @param array $args Args to construct class
 		 * @return void
 		 */
-		public function set(string $id, string $namespace, array $args = []) :void
+		public function set(string $id, string $namespace, array $args = [], array $setters = [], bool $singleton = true) :void
 		{
-			$this->di->set($id, $namespace, $args);
+			$this->di->set($id, $namespace, $args, $setters, $singleton);
 		}
 
 		/**
@@ -118,7 +118,7 @@ namespace FcPHP\Di\Facades
 
 		public function afterMake()
 		{
-			
+
 		}
 	}
 }

@@ -7,9 +7,9 @@ namespace FcPhp\Di\Factories
 
 	class ContainerFactory implements IContainerFactory
 	{
-		public function getInstance($instance, $args)
+		public function getInstance($instance, array $args, array $setters)
 		{
-			return new Container($instance, $args);
+			return new Container($instance, $args, $setters);
 		}
 	}
 }
