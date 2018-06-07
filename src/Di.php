@@ -2,16 +2,7 @@
 
 namespace FcPhp\Di
 {
-	// use ReflectionClass;
 	use FcPhp\Di\Interfaces\IDi;
-	// use FcPhp\Di\Interfaces\IInstance;
-	// use FcPhp\Di\Container;
-	// use FcPhp\Di\Instance;
-	// use FcPhp\Di\Exceptions\InstanceNotFound;
-	// use FcPhp\Di\Exceptions\ContainerNotFound;
-	// use FcPhp\Di\Exceptions\ClassBusy;
-	// use FcPhp\Di\Factories\ContainerFactory;
-	// use FcPhp\Di\Factories\DiFactory;
 	use FcPhp\Di\Interfaces\IContainerFactory;
 	use FcPhp\Di\Interfaces\IDiFactory;
 	use FcPhp\Di\Interfaces\IInstanceFactory;
