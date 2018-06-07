@@ -3,24 +3,89 @@ Dependency Injection 4 FcPHP
 
 [![Build Status](https://travis-ci.org/00F100/fcphp-di.svg?branch=master)](https://travis-ci.org/00F100/fcphp-di) [![codecov](https://codecov.io/gh/00F100/fcphp-di/branch/master/graph/badge.svg)](https://codecov.io/gh/00F100/fcphp-di)
 
+## How to use
+
 ```php
 <?php
 
-use FcPhp\Di\Di;
-use FcPhp\Di\Factories\ContainerFactory;
-use FcPhp\Di\Factories\DiFactory;
-use FcPhp\Di\Factories\InstanceFactory;
+use FcPHP\Di\Facades\DiFacade;
 
-$di = Di::getInstance(new DiFactory(), new ContainerFactory(), new InstanceFactory());
+$di = DiFacade::getInstance();
 
-// class Example
-//          __construct(string $foo)
-$di->set('Example', 'Namespace\To\Example', ['foo' => 'bar'], []);
+// Method set()
+// Return void
+$di->set(string $id, string $namespace, array $args = [], array $setters = [], bool $singleton = true);
 
-// class ExampleB
-//          __construct(Namespace\To\Example $example)
-$di->set('ExampleB', 'Namespace\To\Class2', ['example' => $di->get('Example')]);
+// Method get()
+// Return new instance of Container
+$di->get(string $id, array $args = [], array $setters = []);
 
-echo $di->make('ExampleB')->example->foo
-// Return: bar
+// Method make()
+// Return instance of class
+$di->make(string $id, array $args = [], array $setters = []);
+```
+
+## Examples
+
+```php
+<?php
+
+/*
+namespace Namespace\To {
+	class Example {
+		public $foo;
+		private $anotherFoo;
+		public function __construct(string $foo) {
+			$this->foo = $foo;
+		}
+		public function setAnotherFoo($foo) {
+			$this->anotherFoo = $foo;
+		}
+		public functio getAnotherFoo() {
+			return $this->anotherFoo;
+		}
+	}
+	class ExampleBar {
+		public $example;
+		__construct(Example $example) {
+			$this->example = $example;
+		}
+	}
+}
+*/
+$di->set('Example', 'Namespace\To\Example', ['foo' => 'bar'], ['setAnotherFoo', 'AnotherBar']);
+$di->set('ExampleBar', 'Namespace\To\ExampleBar', ['example' => $di->get('Example')]);
+
+// Print "bar"
+echo $di->make('ExampleBar')->example->foo
+
+// Print "AnotherBar"
+echo $di->make('ExampleBar')->example->getAnotherFoo();
+```
+
+## Events
+
+```php
+<?php
+
+$di->event([
+	'beforeSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
+
+	},
+	'afterSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton, IInstance $instance) {
+
+	},
+	'beforeGet' => function(string $id, array $args, array $setters) {
+
+	},
+	'afterGet' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container) {
+
+	},
+	'beforeMake' => function(string $id, array $args, array $setters) {
+
+	},
+	'afterMake' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container, $class) {
+
+	}
+]);
 ```

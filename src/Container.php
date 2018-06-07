@@ -68,8 +68,6 @@ namespace FcPhp\Di
 				$this->lock = true;
 			}
 
-			// process setters
-
 			return $this->classInstance;
 		}
 

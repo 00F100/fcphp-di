@@ -62,9 +62,9 @@ namespace FcPHP\Di\Facades
 		 * @param array $args Args to construct instance
 		 * @return FcPhp\Di\Interfaces\IContainer
 		 */
-		public function get(string $id, array $args = []) :IContainer
+		public function get(string $id, array $args = [], array $setters = []) :IContainer
 		{
-			return $this->di->get($id, $args);
+			return $this->di->get($id, $args, $setters);
 		}
 
 		/**
@@ -74,9 +74,9 @@ namespace FcPHP\Di\Facades
 		 * @param array $args Args to construct instance
 		 * @return FcPhp\Di\Interfaces\IContainer
 		 */
-		public function getNonSingleton(string $id, array $args = []) :IContainer
+		public function getNonSingleton(string $id, array $args = [], array $setters = []) :IContainer
 		{
-			return $this->di->getNonSingleton($id, $args);
+			return $this->di->getNonSingleton($id, $args, $setters);
 		}
 
 		/**
@@ -86,9 +86,9 @@ namespace FcPHP\Di\Facades
 		 * @param array $args Args to construct instance
 		 * @return mixed
 		 */
-		public function make(string $id, array $args = [])
+		public function make(string $id, array $args = [], array $setters = [])
 		{
-			return $this->di->make($id, $args);
+			return $this->di->make($id, $args, $setters);
 		}
 
 		public function beforeSet()

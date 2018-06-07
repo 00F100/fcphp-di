@@ -26,22 +26,22 @@ namespace FcPHP\Di\Test\Unit
 			}
 
 			$this->di->event([
-				'beforeSet' => function(string $id, string $namespace, array $args, bool $singleton) {
+				'beforeSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
 
 				},
-				'afterSet' => function(string $id, string $namespace, array $args, bool $singleton, IInstance $instance) {
+				'afterSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton, IInstance $instance) {
 
 				},
-				'beforeGet' => function(string $id, array $args) {
+				'beforeGet' => function(string $id, array $args, array $setters) {
 
 				},
-				'afterGet' => function(string $id, array $args, IInstance $instance, IContainer $container) {
+				'afterGet' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container) {
 
 				},
-				'beforeMake' => function(string $id, array $args) {
+				'beforeMake' => function(string $id, array $args, array $setters) {
 
 				},
-				'afterMake' => function(string $id, array $args, IInstance $instance, IContainer $container, $class) {
+				'afterMake' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container, $class) {
 
 				}
 			]);

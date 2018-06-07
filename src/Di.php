@@ -2,23 +2,28 @@
 
 namespace FcPhp\Di
 {
-	use ReflectionClass;
+	// use ReflectionClass;
 	use FcPhp\Di\Interfaces\IDi;
 	use FcPhp\Di\Interfaces\IContainer;
+	// use FcPhp\Di\Interfaces\IInstance;
 	// use FcPhp\Di\Container;
-	use FcPhp\Di\Instance;
-	use FcPhp\Di\Exceptions\InstanceNotFound;
-	use FcPhp\Di\Exceptions\ContainerNotFound;
-	use FcPhp\Di\Exceptions\ClassBusy;
-	use FcPhp\Di\Factories\ContainerFactory;
-	use FcPhp\Di\Factories\DiFactory;
+	// use FcPhp\Di\Instance;
+	// use FcPhp\Di\Exceptions\InstanceNotFound;
+	// use FcPhp\Di\Exceptions\ContainerNotFound;
+	// use FcPhp\Di\Exceptions\ClassBusy;
+	// use FcPhp\Di\Factories\ContainerFactory;
+	// use FcPhp\Di\Factories\DiFactory;
 	use FcPhp\Di\Interfaces\IContainerFactory;
 	use FcPhp\Di\Interfaces\IDiFactory;
 	use FcPhp\Di\Interfaces\IInstanceFactory;
-	use FcPhp\Di\Interfaces\IInstance;
+	use FcPhp\Di\Traits\DiEvents;
+	use FcPhp\Di\Traits\DiCore;
 
 	class Di implements IDi
 	{
+		use DiEvents;
+		use DiCore;
+
 		/**
 		 * @var FcPHP\Di\Interfaces\IDi Instance
 		 */
@@ -49,11 +54,34 @@ namespace FcPhp\Di
 		 */
 		private $instanceFactory;
 
+		/**
+		 * @var object 
+		 */
 		private $beforeSet;
+
+		/**
+		 * @var object 
+		 */
 		private $afterSet;
+
+		/**
+		 * @var object 
+		 */
 		private $beforeGet;
+
+		/**
+		 * @var object 
+		 */
 		private $afterGet;
+
+		/**
+		 * @var object 
+		 */
 		private $beforeMake;
+
+		/**
+		 * @var object 
+		 */
 		private $afterMake;
 
 		/**
@@ -92,11 +120,7 @@ namespace FcPhp\Di
 		 */
 		public function set(string $id, string $namespace, array $args = [], array $setters = [], bool $singleton = true) :IDi
 		{
-			$this->beforeSet($id, $namespace, $args, $setters, $singleton);
-			if(!isset($this->instances[$id])) {
-				$this->instances[$id] = $this->instanceFactory->getInstance($namespace, $args, $setters, $singleton);
-			}
-			$this->afterSet($id, $namespace, $args, $setters, $singleton, $this->instances[$id]);
+			$this->_set($id, $namespace, $args, $setters, $singleton);
 			return $this;
 		}
 
@@ -123,28 +147,7 @@ namespace FcPhp\Di
 		 */
 		public function get(string $id, array $args = [], array $setters = []) :IContainer
 		{
-			$this->beforeGet($id, $args, $setters);
-			if(!isset($this->instances[$id])) {
-				throw new InstanceNotFound();
-			}
-			$instance = $this->instances[$id];
-			if(!$instance->getIsSingleton()) {
-				$container = $this->containerFactory->getInstance($instance, $args, $setters);
-				$this->registerContainer($container);
-				$this->afterGet($id, $args, $setters, $instance, $container);
-				return $container;
-			}
-			$checksum = $this->getChecksum($id, $args);
-			if(!isset($this->containers[$checksum])) {
-				$this->containers[$checksum] = $this->containerFactory->getInstance($instance, $args, $setters);
-				$this->registerContainer($this->containers[$checksum]);
-			}else{
-				if(count($args) || count($setters) > 0) {
-					throw new ClassBusy();
-				}
-			}
-			$this->afterGet($id, $args, $setters, $instance, $this->containers[$checksum]);
-			return $this->containers[$checksum];
+			return $this->_get($id, $args, $setters);
 		}
 
 		/**
@@ -156,12 +159,7 @@ namespace FcPhp\Di
 		 */
 		public function getNonSingleton(string $id, array $args = [], array $setters = []) :IContainer
 		{
-			if(!isset($this->instances[$id])) {
-				throw new InstanceNotFound();
-			}
-			$container = $this->containerFactory->getInstance($this->instances[$id], $args, $setters);
-			$this->registerContainer($container);
-			return $container;
+			return $this->_getNonSingleton($id, $args, $setters);
 		}
 
 		/**
@@ -169,108 +167,26 @@ namespace FcPhp\Di
 		 *
 		 * @param string $id Identify of class
 		 * @param array $args Args to contruct class
+		 * @return mixed
 		 */
-		public function make(string $id, array $args = [])
+		public function make(string $id, array $args = [], array $setters = [])
 		{
-			$this->beforeMake($id, $args);
-			if(!isset($this->instances[$id])) {
-				throw new InstanceNotFound();
-			}
-			$instance = $this->instances[$id];
-			if(!$instance->getIsSingleton()) {
-				$container = $this->getNonSingleton($id, $args);
-			}else{
-				$checksum = $this->getChecksum($id, $args);
-				if(!isset($this->containers[$checksum])) {
-					$this->containers[$checksum] = $this->get($id, $args);
-				}
-				$container = $this->containers[$checksum];
-			}
-			$class = $container->getClass();
-			$this->afterMake($id, $args, $instance, $container, $class);
-			return $class;
+			return $this->_make($id, $args, $setters);
 		}
 
-		/**
-		 * Method to generate new checksum
-		 *
-		 * @return string
-		 */
-		private function getChecksum()
-		{
-			return md5(serialize(func_get_args()));
-		}
+
+
 
 		/**
-		 * Method to register container for log
+		 * Method to execute clousure on event
 		 *
-		 * @param FcPhp\Di\Interfaces\IContainer $container
+		 * @param string $eventName Event Name, ex: beforeSet
+		 * @param object $callback Function to execute
 		 * @return void
 		 */
-		private function registerContainer(IContainer $container) :void
+		public function event($eventName, object $callback = null) :void
 		{
-			if($this->register) {
-				$this->register_containers[] = $container;
-			}
-		}
-
-		public function event($eventName, $callback = null)
-		{
-			if(is_array($eventName)) {
-				foreach($eventName as $eName => $clousure) {
-					$this->{$eName} = $clousure;
-				}
-			}else{
-				$this->{$eventName} = $callback;
-			}
-		}
-
-		public function beforeSet(string $id, string $namespace, array $args, array $setters, bool $singleton)
-		{
-			$event = $this->beforeSet;
-			if(gettype($event) == 'object') {
-				$event($id, $namespace, $args, $singleton);
-			}
-		}
-
-		public function afterSet(string $id, string $namespace, array $args, array $setters, bool $singleton, IInstance $instance)
-		{
-			$event = $this->beforeSet;
-			if(gettype($event) == 'object') {
-				$event($id, $namespace, $args, $singleton, $instance);
-			}
-		}
-
-		public function beforeGet(string $id, array $args)
-		{
-			$event = $this->beforeGet;
-			if(gettype($event) == 'object') {
-				$event($id, $args);
-			}
-		}
-
-		public function afterGet(string $id, array $args, array $setters, IInstance $instance, IContainer $container)
-		{
-			$event = $this->afterGet;
-			if(gettype($event) == 'object') {
-				$event($id, $args, $instance, $container);
-			}
-		}
-
-		public function beforeMake(string $id, array $args)
-		{
-			$event = $this->beforeMake;
-			if(gettype($event) == 'object') {
-				$event($id, $args);
-			}
-		}
-
-		public function afterMake(string $id, array $args, IInstance $instance, IContainer $container, $class)
-		{
-			$event = $this->afterMake;
-			if(gettype($event) == 'object') {
-				$event($id, $args, $instance, $container, $class);
-			}
+			$this->_event($eventName, $callback);
 		}
 	}
 }
