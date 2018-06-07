@@ -12,16 +12,34 @@ use FcPHP\Di\Facades\DiFacade;
 
 $di = DiFacade::getInstance();
 
-// Method set()
-// Return void
+/**
+ * Method to configure new instance
+ *
+ * @param string $id Identify instance
+ * @param string $namespace Namespace of class
+ * @param array $args Args to construct class
+ * @param bool $singleton Define this class has singleton (or not
+ * @return FcPhp\Di\Interfaces\IDi
+ */
 $di->set(string $id, string $namespace, array $args = [], array $setters = [], bool $singleton = true);
 
-// Method get()
-// Return new instance of Container
+/**
+ * Method to return Container to manipulate instance
+ *
+ * @param string $id Identify instance
+ * @param array $args Args to construct class
+ * @param array $setters Setters to after construct class
+ * @return FcPhp\Di\Interfaces\IContainer
+ */
 $di->get(string $id, array $args = [], array $setters = []);
 
-// Method make()
-// Return instance of class
+/**
+ * Method to make new instance of class
+ *
+ * @param string $id Identify of class
+ * @param array $args Args to contruct class
+ * @return mixed
+ */
 $di->make(string $id, array $args = [], array $setters = []);
 ```
 
