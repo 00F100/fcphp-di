@@ -91,34 +91,16 @@ namespace FcPHP\Di\Facades
 			return $this->di->make($id, $args, $setters);
 		}
 
-		public function beforeSet()
+		/**
+		 * Method to execute clousure on event
+		 *
+		 * @param string $eventName Event Name, ex: beforeSet
+		 * @param object $callback Function to execute
+		 * @return void
+		 */
+		public function event($eventName, object $callback = null) :void
 		{
-
-		}
-
-		public function afterSet()
-		{
-
-		}
-
-		public function beforeGet()
-		{
-			
-		}
-
-		public function afterGet()
-		{
-
-		}
-
-		public function beforeMake()
-		{
-
-		}
-
-		public function afterMake()
-		{
-
+			return $this->di->event($eventName, $callback);
 		}
 	}
 }
