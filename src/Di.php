@@ -4,7 +4,6 @@ namespace FcPhp\Di
 {
 	// use ReflectionClass;
 	use FcPhp\Di\Interfaces\IDi;
-	use FcPhp\Di\Interfaces\IContainer;
 	// use FcPhp\Di\Interfaces\IInstance;
 	// use FcPhp\Di\Container;
 	// use FcPhp\Di\Instance;
@@ -18,6 +17,8 @@ namespace FcPhp\Di
 	use FcPhp\Di\Interfaces\IInstanceFactory;
 	use FcPhp\Di\Traits\DiEvents;
 	use FcPhp\Di\Traits\DiCore;
+	use FcPhp\Di\Interfaces\IInstance;
+	use FcPhp\Di\Interfaces\IContainer;
 
 	class Di implements IDi
 	{
@@ -173,9 +174,6 @@ namespace FcPhp\Di
 		{
 			return $this->_make($id, $args, $setters);
 		}
-
-
-
 
 		/**
 		 * Method to execute clousure on event
