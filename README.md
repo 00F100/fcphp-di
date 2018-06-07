@@ -30,6 +30,10 @@ $di->make(string $id, array $args = [], array $setters = []);
 ```php
 <?php
 
+use FcPHP\Di\Facades\DiFacade;
+
+$di = DiFacade::getInstance();
+
 /*
 namespace Namespace\To {
 	class Example {
@@ -67,6 +71,12 @@ echo $di->make('ExampleBar')->example->getAnotherFoo();
 
 ```php
 <?php
+
+use FcPHP\Di\Facades\DiFacade;
+use FcPhp\Di\Interfaces\IInstance;
+use FcPhp\Di\Interfaces\IContainer;
+
+$di = DiFacade::getInstance();
 
 $di->event([
 	'beforeSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
