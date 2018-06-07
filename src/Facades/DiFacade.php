@@ -94,7 +94,7 @@ namespace FcPHP\Di\Facades
 		/**
 		 * Method to execute clousure on event
 		 *
-		 * @param string $eventName Event Name, ex: beforeSet
+		 * @param string|array $eventName Event Name, ex: beforeSet
 		 * @param object $callback Function to execute
 		 * @return void
 		 */
