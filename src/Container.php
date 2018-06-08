@@ -16,6 +16,14 @@ namespace FcPhp\Di
 		private $classInstance = false;
 		private $lock = false;
 
+		/**
+		 * Method to construct instance of Container
+		 *
+		 * @param FcPhp\Di\Interfaces\IInstance $instance Instance of Container
+		 * @param array $args Args to construct
+		 * @param array $setters Setters methods
+		 * @return void
+		 */
 		public function __construct(IInstance $instance, array $args = [], array $setters = [])
 		{
 			$this->instance = $instance;
@@ -23,6 +31,11 @@ namespace FcPhp\Di
 			$this->setters = $setters;
 		}
 
+		/**
+		 * Method to return instance of class inside Container
+		 *
+		 * @return mixed
+		 */
 		public function getClass()
 		{
 			if(!$this->classInstance) {
@@ -71,6 +84,12 @@ namespace FcPhp\Di
 			return $this->classInstance;
 		}
 
+		/**
+		 * Method to register instance Container
+		 *
+		 * @param mixed Instance to inject
+		 * @return FcPhp\Di\Interfaces\IContainer
+		 */
 		private function register($instance) :IContainer
 		{
 			$this->classInstance = $instance;

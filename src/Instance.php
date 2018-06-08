@@ -29,6 +29,7 @@ namespace FcPhp\Di
 		 * @param string $namespace Namespace of class
 		 * @param array $args Args to construct new class
 		 * @param bool $singlegon Define if this class is singleton (or not)
+		 * @return void
 		 */
 		public function __construct(string $namespace, array $args, array $setters, bool $singleton)
 		{
@@ -79,6 +80,11 @@ namespace FcPhp\Di
 			return $this->singleton;
 		}
 
+		/**
+		 * Method to return list of setters to class
+		 *
+		 * @return array
+		 */
 		public function getSetters() :array
 		{
 			return $this->setters;

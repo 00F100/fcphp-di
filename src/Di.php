@@ -79,9 +79,12 @@ namespace FcPhp\Di
 		/**
 		 * Return new instance of Di
 		 *
+		 * @param FcPhp\Di\Interfaces\IDiFactory $diFactory Instance of Di Factory
+		 * @param FcPhp\Di\Interfaces\IContainerFactory $containerFactory Instance of Container Factory
+		 * @param FcPhp\Di\Interfaces\IInstanceFactory $instanceFactory Instance of Instance (??!) Factory
 		 * @return FcPHP\Di\Interfaces\IDi
 		 */
-		public static function getInstance(IDiFactory $diFactory, IContainerFactory $containerFactory, IInstanceFactory $instanceFactory, bool $register = false)
+		public static function getInstance(IDiFactory $diFactory, IContainerFactory $containerFactory, IInstanceFactory $instanceFactory, bool $register = false) :IDi
 		{
 			if(!self::$instance instanceof IDi) {
 				self::$instance = $diFactory->getInstance($containerFactory, $instanceFactory, $register);
@@ -107,6 +110,7 @@ namespace FcPhp\Di
 		 * @param string $id Identify instance
 		 * @param string $namespace Namespace of class
 		 * @param array $args Args to construct class
+		 * @param array $setters Setters to class
 		 * @param bool $singleton Define this class has singleton (or not
 		 * @return FcPhp\Di\Interfaces\IDi
 		 */
@@ -122,6 +126,7 @@ namespace FcPhp\Di
 		 * @param string $id Identify instance
 		 * @param string $namespace Namespace of class
 		 * @param array $args Args to construct class
+		 * @param array $setters Setters to class
 		 * @return FcPhp\Di\Interfaces\IDi
 		 */
 		public function setNonSingleton(string $id, string $namespace, array $args = [], array $setters = []) :IDi
@@ -147,6 +152,7 @@ namespace FcPhp\Di
 		 *
 		 * @param string $id Identify of instance
 		 * @param array $args Args to construct class
+		 * @param array $setters Setters to class
 		 * @return FcPhp\Di\Interfaces\IContainer
 		 */
 		public function getNonSingleton(string $id, array $args = [], array $setters = []) :IContainer
@@ -159,6 +165,7 @@ namespace FcPhp\Di
 		 *
 		 * @param string $id Identify of class
 		 * @param array $args Args to contruct class
+		 * @param array $setters Setters to class
 		 * @return mixed
 		 */
 		public function make(string $id, array $args = [], array $setters = [])
