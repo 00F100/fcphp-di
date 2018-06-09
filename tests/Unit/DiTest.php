@@ -1,185 +1,226 @@
 <?php
 
-namespace FcPHP\Di\Test\Unit
+use FcPhp\Di\Di;
+use FcPhp\Di\Exceptions\InstanceNotFound;
+use FcPHP\Di\Test\Unit\Mock\ClassTest;
+use PHPUnit\Framework\TestCase;
+use FcPhp\Di\Interfaces\IContainer;
+
+use FcPhp\Di\Factories\ContainerFactory;
+use FcPhp\Di\Factories\DiFactory;
+use FcPhp\Di\Factories\InstanceFactory;
+
+use FcPhp\Di\Interfaces\IInstance;
+
+class DiTest extends TestCase
 {
-	use FcPhp\Di\Di;
-	use FcPhp\Di\Exceptions\InstanceNotFound;
-	use FcPHP\Di\Test\Unit\Mock\ClassTest;
-	use PHPUnit\Framework\TestCase;
-	use FcPhp\Di\Interfaces\IContainer;
+	public $di;
 
-	use FcPhp\Di\Factories\ContainerFactory;
-	use FcPhp\Di\Factories\DiFactory;
-	use FcPhp\Di\Factories\InstanceFactory;
-
-	use FcPhp\Di\Interfaces\IInstance;
-
-	class DiTest extends TestCase
+	public function setUp()
 	{
-		public $di;
 
-		public function setUp()
-		{
+		if(!$this->di instanceof Di) {
 
-			if(!$this->di instanceof Di) {
-				$this->di = Di::getInstance(new DiFactory(), new ContainerFactory(), new InstanceFactory(), true);
-			}
+			$instanceFactory = $this
+				->createMock('\FcPhp\Di\Interfaces\IInstanceFactory');
 
-			$this->di->event([
-				'beforeSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
+			$instanceFactory
+				->expects($this->any())
+				->method('getInstance')
+				->will($this->returnCallback(function(string $namespace, array $args = [], array $setters = [], bool $singleton = true) {
 
-				},
-				'afterSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton, IInstance $instance) {
+					$instance = $this
+						->createMock('\FcPhp\Di\Interfaces\IInstance');
 
-				},
-				'beforeGet' => function(string $id, array $args, array $setters) {
+					$instance
+						->expects($this->any())
+						->method('getNamespace')
+						->will($this->returnValue($namespace));
+					
+					$instance
+						->expects($this->any())
+						->method('getArgs')
+						->will($this->returnValue($args));
+					
+					$instance
+						->expects($this->any())
+						->method('getSetters')
+						->will($this->returnValue($setters));
 
-				},
-				'afterGet' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container) {
+					$instance
+						->expects($this->any())
+						->method('getIsSingleton')
+						->will($this->returnValue($singleton));
 
-				},
-				'beforeMake' => function(string $id, array $args, array $setters) {
+					return $instance;
+				}));
 
-				},
-				'afterMake' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container, $class) {
-
-				}
-			]);
-
-			$this->di->event('beforeMake', function() {
-
-			});
-
+			$this->di = new Di(new ContainerFactory(), $instanceFactory, true);
 		}
 
-		public function testConstruct()
-		{
-			$this->assertTrue($this->di instanceof Di);
-		}
+		// $this->di->event([
+		// 	'beforeSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
 
-		public function testSetGetContainer()
-		{
-			$args = [
-				'param1' => 'param1value'
-			];
-			$this->di->set('ClassTest', 'FcPHP\Di\Test\Unit\Mock\ClassTest', $args);
-			$this->di->setNonSingleton('ClassTestNonSingleton', 'FcPHP\Di\Test\Unit\Mock\ClassTest', $args);
-			$this->assertTrue($this->di->get('ClassTest') instanceof IContainer);
-		}
+		// 	},
+		// 	'afterSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton, IInstance $instance) {
 
-		public function testSetters()
-		{
-			$valueParam = 'valueParam1';
-			$args = [
-				'param1' => 'testeParam1'
-			];
-			$setters = [
-				'setValue' => $valueParam
-			];
-			$this->di->set('testSetters', 'FcPHP\Di\Test\Unit\Mock\ClassTest', $args, $setters);
-			$this->assertEquals($this->di->make('testSetters')->getValue(), $valueParam);
-		}
+		// 	},
+		// 	'beforeGet' => function(string $id, array $args, array $setters) {
 
-		public function testSetteronGetNonSingleton()
-		{
-			$class = $this->di->getNonSingleton('ClassTest', [], ['setValue' => 'param111']);
-			$this->assertEquals($class->getClass()->getValue(), 'param111');
-		}
+		// 	},
+		// 	'afterGet' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container) {
 
-		/**
-	     * @expectedException FcPhp\Di\Exceptions\ClassBusy
-	     */
-		public function testSetteronGetClassBusy()
-		{
-			$class = $this->di->get('ClassTest', [], ['setValue' => 'param111']);
-			$this->assertEquals($class->getClass()->getValue(), 'param111');
-		}
+		// 	},
+		// 	'beforeMake' => function(string $id, array $args, array $setters) {
 
-		public function testSetGetNonSingletonContainer()
-		{
-			$this->assertTrue($this->di->getNonSingleton('ClassTest') instanceof IContainer);
-		}
+		// 	},
+		// 	'afterMake' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container, $class) {
 
-		public function testMakeSingletonClass()
-		{
-			$value = time();
-			$class = $this->di->make('ClassTest');
-			$this->assertTrue($class instanceof ClassTest);
-			$class->setValue($value);
-			$classTestSingleton = $this->di->make('ClassTest');
-			$this->AssertEquals($classTestSingleton->getValue(), $value);
-			$param1 = 'param1change';
-			$classNewArgs = $this->di->make('ClassTest', ['param1' => $param1]);
-			$this->assertEquals($classNewArgs->getParam1(), $param1);
-			$this->assertEquals($classNewArgs->getValue(), null);
-			$value2 = 'test';
-			$classNewArgs->setValue($value2);
-			$classNewArgs2 = $this->di->make('ClassTest', ['param1' => $param1]);
-			$this->assertEquals($classNewArgs2->getParam1(), $param1);
-			$this->assertEquals($classNewArgs2->getValue(), $value2);
-		}
+		// 	}
+		// ]);
 
-		public function testMakeNonSingletonClass()
-		{
-			$instance = $this->di->make('ClassTestNonSingleton');
-			$instance->setValue('value');
-			$instance2 = $this->di->make('ClassTestNonSingleton');
-			$this->assertEquals($instance2->getValue(), null);
-		}
+		// $this->di->event('beforeMake', function() {
 
-		public function testContainerGenerate()
-		{
-			$value = 'value';
-			$container = $this->di->get('ClassTest');
-			$this->assertTrue($container instanceof IContainer);
-			$this->assertTrue($container->getClass() instanceof ClassTest);
-			$container->getClass()->setValue($value);
-			$this->assertEquals($container->getClass()->getValue(), $value);
-			$container2 = $this->di->get('ClassTest');
-			$this->assertEquals($container2->getClass()->getValue(), $value);
-		}
+		// });
 
-		public function testContainerGeneratedNonSingleton()
-		{
-			$value = 'value';
-			$container = $this->di->get('ClassTestNonSingleton');
-			$this->assertTrue($container instanceof IContainer);
-			$this->assertTrue($container->getClass() instanceof ClassTest);
-			$container->getClass()->setValue($value);
-			$this->assertEquals($container->getClass()->getValue(), $value);
-			$container2 = $this->di->get('ClassTestNonSingleton');
-			$this->assertEquals($container2->getClass()->getValue(), null);
-		}
+	}
 
-		public function testInjectDependency()
-		{
-			$class = $this->di->make('ClassTest', ['param1' => $this->di->get('ClassTest', ['param1' => $this->di->get('ClassTest')])]);
-			$this->assertTrue($class->getParam1() instanceof ClassTest);
-			$this->assertTrue($class->getParam1()->getParam1() instanceof ClassTest);
-		}
+	public function testConstruct()
+	{
+		$this->assertTrue($this->di instanceof Di);
+	}
 
-		/**
-	     * @expectedException FcPhp\Di\Exceptions\InstanceNotFound
-	     */
-		public function testInstancesNotFound()
-		{
-			$this->di->get('test');
-		}
+	public function testSetGetContainer()
+	{
+		$args = [
+			'param1' => 'param1value'
+		];
+		$this->di->set('ClassTest', 'FcPHP\Di\Test\Unit\Mock\ClassTest', $args);
+		$this->di->setNonSingleton('ClassTestNonSingleton', 'FcPHP\Di\Test\Unit\Mock\ClassTest', $args);
+		$this->assertTrue($this->di->get('ClassTest') instanceof IContainer);
+	}
 
-		/**
-	     * @expectedException FcPhp\Di\Exceptions\InstanceNotFound
-	     */
-		public function testInstancesMakeNotFound()
-		{
-			$this->di->make('test');
-		}
+	public function testSetters()
+	{
+		$valueParam = 'valueParam1';
+		$args = [
+			'param1' => 'testeParam1'
+		];
+		$setters = [
+			'setValue' => $valueParam
+		];
+		$this->di->set('testSetters', 'FcPHP\Di\Test\Unit\Mock\ClassTest', $args, $setters);
+		$this->assertEquals($this->di->make('testSetters')->getValue(), $valueParam);
+	}
 
-		/**
-	     * @expectedException FcPhp\Di\Exceptions\InstanceNotFound
-	     */
-		public function testInstancesNewNotFound()
-		{
-			$this->di->getNonSingleton('test');
-		}
+	public function testSetteronGetNonSingleton()
+	{
+		$this->di->set('ClassTest', 'FcPHP\Di\Test\Unit\Mock\ClassTest');
+		$class = $this->di->getNonSingleton('ClassTest', [], ['setValue' => 'param111']);
+		$this->assertEquals($class->getClass()->getValue(), 'param111');
+	}
+
+	/**
+     * @expectedException FcPhp\Di\Exceptions\ClassBusy
+     */
+	public function testSetteronGetClassBusy()
+	{
+		$this->di->set('ClassTest', 'FcPHP\Di\Test\Unit\Mock\ClassTest');
+		$class = $this->di->get('ClassTest', [], ['setValue' => 'param111']);
+		$this->assertEquals($class->getClass()->getValue(), 'param111');
+		$class = $this->di->get('ClassTest', [], ['setValue' => 'param222']);
+	}
+
+	public function testSetGetNonSingletonContainer()
+	{
+		$this->di->set('ClassTest', 'FcPHP\Di\Test\Unit\Mock\ClassTest');
+		$this->assertTrue($this->di->getNonSingleton('ClassTest') instanceof IContainer);
+	}
+
+	public function testMakeSingletonClass()
+	{
+		$value = time();
+		$this->di->set('ClassTest', 'FcPHP\Di\Test\Unit\Mock\ClassTest');
+		$class = $this->di->make('ClassTest');
+		$this->assertTrue($class instanceof ClassTest);
+		$class->setValue($value);
+		$classTestSingleton = $this->di->make('ClassTest');
+		$this->AssertEquals($classTestSingleton->getValue(), $value);
+		$param1 = 'param1change';
+		$classNewArgs = $this->di->make('ClassTest', ['param1' => $param1]);
+		$this->assertEquals($classNewArgs->getParam1(), $param1);
+		$this->assertEquals($classNewArgs->getValue(), null);
+		$value2 = 'test';
+		$classNewArgs->setValue($value2);
+		$classNewArgs2 = $this->di->make('ClassTest', ['param1' => $param1]);
+		$this->assertEquals($classNewArgs2->getParam1(), $param1);
+		$this->assertEquals($classNewArgs2->getValue(), $value2);
+	}
+
+	public function testMakeNonSingletonClass()
+	{
+		$this->di->setNonSingleton('ClassTestNonSingleton', 'FcPHP\Di\Test\Unit\Mock\ClassTest');
+		$instance = $this->di->make('ClassTestNonSingleton');
+		$instance->setValue('value');
+		$instance2 = $this->di->make('ClassTestNonSingleton');
+		$this->assertEquals($instance2->getValue(), null);
+	}
+
+	public function testContainerGenerate()
+	{
+		$value = 'value';
+		$this->di->set('ClassTest', 'FcPHP\Di\Test\Unit\Mock\ClassTest');
+		$container = $this->di->get('ClassTest');
+		$this->assertTrue($container instanceof IContainer);
+		$this->assertTrue($container->getClass() instanceof ClassTest);
+		$container->getClass()->setValue($value);
+		$this->assertEquals($container->getClass()->getValue(), $value);
+		$container2 = $this->di->get('ClassTest');
+		$this->assertEquals($container2->getClass()->getValue(), $value);
+	}
+
+	public function testContainerGeneratedNonSingleton()
+	{
+		$value = 'value';
+		$this->di->setNonSingleton('ClassTestNonSingleton', 'FcPHP\Di\Test\Unit\Mock\ClassTest');
+		$container = $this->di->get('ClassTestNonSingleton');
+		$this->assertTrue($container instanceof IContainer);
+		$this->assertTrue($container->getClass() instanceof ClassTest);
+		$container->getClass()->setValue($value);
+		$this->assertEquals($container->getClass()->getValue(), $value);
+		$container2 = $this->di->get('ClassTestNonSingleton');
+		$this->assertEquals($container2->getClass()->getValue(), null);
+	}
+
+	public function testInjectDependency()
+	{
+		$this->di->set('ClassTest', 'FcPHP\Di\Test\Unit\Mock\ClassTest');
+		$class = $this->di->make('ClassTest', ['param1' => $this->di->get('ClassTest', ['param1' => $this->di->get('ClassTest')])]);
+		$this->assertTrue($class->getParam1() instanceof ClassTest);
+		$this->assertTrue($class->getParam1()->getParam1() instanceof ClassTest);
+	}
+
+	/**
+     * @expectedException FcPhp\Di\Exceptions\InstanceNotFound
+     */
+	public function testInstancesNotFound()
+	{
+		$this->di->get('test');
+	}
+
+	/**
+     * @expectedException FcPhp\Di\Exceptions\InstanceNotFound
+     */
+	public function testInstancesMakeNotFound()
+	{
+		$this->di->make('test');
+	}
+
+	/**
+     * @expectedException FcPhp\Di\Exceptions\InstanceNotFound
+     */
+	public function testInstancesNewNotFound()
+	{
+		$this->di->getNonSingleton('test');
 	}
 }

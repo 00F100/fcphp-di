@@ -15,7 +15,7 @@ namespace FcPhp\Di\Factories
 		 * @param array $setters Setters to class
 		 * @param bool $singleton If is singleton
 		 */
-		public function getInstance(string $namespace, array $args, array $setters, bool $singleton)
+		public function getInstance(string $namespace, array $args = [], array $setters = [], bool $singleton = true)
 		{
 			return new Instance($namespace, $args, $setters, $singleton);
 		}

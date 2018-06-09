@@ -35,7 +35,7 @@ namespace FcPhp\Di\Traits
 		 * @param FcPhp\Di\Interfaces\IInstance $instance Instance config of class
 		 * @return void
 		 */
-		public function afterSet(string $id, string $namespace, array $args, array $setters, bool $singleton, IInstance $instance)
+		public function afterSet(string $id, string $namespace, array $args, array $setters, bool $singleton, ?IInstance $instance)
 		{
 			$this->_afterSet($id, $namespace, $args, $setters, $singleton, $instance);
 		}
@@ -63,7 +63,7 @@ namespace FcPhp\Di\Traits
 		 * @param FcPhp\Di\Interfaces\IContainer $container Instance of Container
 		 * @return void
 		 */
-		public function afterGet(string $id, array $args, array $setters, IInstance $instance, IContainer $container) :void
+		public function afterGet(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container) :void
 		{
 			$this->_afterGet($id, $args, $setters, $instance, $container);
 		}
@@ -92,7 +92,7 @@ namespace FcPhp\Di\Traits
 		 * @param mixed $class Instance of class
 		 * @return void
 		 */
-		public function afterMake(string $id, array $args, array $setters, IInstance $instance, IContainer $container, $class) :void
+		public function afterMake(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container, $class) :void
 		{
 			$this->_afterMake($id, $args, $setters, $instance, $container, $class);
 		}
@@ -144,7 +144,7 @@ namespace FcPhp\Di\Traits
 		 * @param FcPhp\Di\Interfaces\IInstance $instance Instance config of class
 		 * @return void
 		 */
-		private function _afterSet(string $id, string $namespace, array $args, array $setters, bool $singleton, IInstance $instance)
+		private function _afterSet(string $id, string $namespace, array $args, array $setters, bool $singleton, ?IInstance $instance)
 		{
 			$event = $this->beforeSet;
 			if(gettype($event) == 'object') {
@@ -178,7 +178,7 @@ namespace FcPhp\Di\Traits
 		 * @param FcPhp\Di\Interfaces\IContainer $container Instance of Container
 		 * @return void
 		 */
-		private function _afterGet(string $id, array $args, array $setters, IInstance $instance, IContainer $container) :void
+		private function _afterGet(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container) :void
 		{
 			$event = $this->afterGet;
 			if(gettype($event) == 'object') {
@@ -213,7 +213,7 @@ namespace FcPhp\Di\Traits
 		 * @param mixed $class Instance of class
 		 * @return void
 		 */
-		private function _afterMake(string $id, array $args, array $setters, IInstance $instance, IContainer $container, $class) :void
+		private function _afterMake(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container, $class) :void
 		{
 			$event = $this->afterMake;
 			if(gettype($event) == 'object') {

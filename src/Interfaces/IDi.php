@@ -27,15 +27,15 @@ namespace FcPhp\Di\Interfaces
 
 		public function beforeSet(string $id, string $namespace, array $args, array $setters, bool $singleton) :void;
 
-		public function afterSet(string $id, string $namespace, array $args, array $setters, bool $singleton, IInstance $instance);
+		public function afterSet(string $id, string $namespace, array $args, array $setters, bool $singleton, ?IInstance $instance);
 
 		public function beforeGet(string $id, array $args, array $setters) :void;
 
-		public function afterGet(string $id, array $args, array $setters, IInstance $instance, IContainer $container) :void;
+		public function afterGet(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container) :void;
 
 		public function beforeMake(string $id, array $args, array $setters) :void;
 
-		public function afterMake(string $id, array $args, array $setters, IInstance $instance, IContainer $container, $class) :void;
+		public function afterMake(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container, $class) :void;
 
 		
 	}
