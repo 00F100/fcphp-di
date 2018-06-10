@@ -12,7 +12,7 @@
             <directory suffix=".php">./src/Traits/</directory>
             <file suffix=".php">./src/Di.php</file>
             <file suffix=".php">./src/Instance.php</file>
-            <file suffix=".php">./src/COntainer.php</file>
+            <file suffix=".php">./src/Container.php</file>
         </whitelist>
         <blacklist>
             <directory suffix=".php">./src/Facades/</directory>
