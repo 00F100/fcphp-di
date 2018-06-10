@@ -45,10 +45,9 @@ class InstanceTest extends Mock
 		$this->assertEquals($this->instance->getSetters(), $this->setters);
 	}
 
-	public function testIsNonSinglet()
+	public function testGetIsSingleton()
 	{
-		$this->instance->isNonSingleton();
-		$this->assertTrue(!$this->instance->getIsSingleton());
+		$this->assertEquals($this->instance->getIsSingleton(), true);
 	}
 
 }

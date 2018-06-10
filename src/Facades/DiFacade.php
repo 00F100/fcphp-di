@@ -53,6 +53,19 @@ namespace FcPhp\Di\Facades
 		}
 
 		/**
+		 * Method to set new class
+		 *
+		 * @param string $id Identify of instance
+		 * @param string $namespace Namespace of class
+		 * @param array $args Args to construct class
+		 * @return void
+		 */
+		public function setNonSingleton(string $id, string $namespace, array $args = [], array $setters = []) :void
+		{
+			$this->di->setNonSingleton($id, $namespace, $args, $setters);
+		}
+
+		/**
 		 * Method to get instance of Container
 		 *
 		 * @param string $id Identify of instance

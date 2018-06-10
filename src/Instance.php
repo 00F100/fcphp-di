@@ -60,17 +60,6 @@ namespace FcPhp\Di
 		}
 
 		/**
-		 * Method to define class is non singleton
-		 *
-		 * @return FcPhp\Di\Interfaces\IInstance
-		 */
-		public function isNonSingleton() :IInstance
-		{
-			$this->singleton = false;
-			return $this;
-		}
-
-		/**
 		 * Method to return if this class is singleton
 		 *
 		 * @return bool

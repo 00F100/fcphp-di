@@ -12,8 +12,6 @@ namespace FcPhp\Di\Interfaces
 
 		public function getArgs() :array;
 
-		public function isNonSingleton() :IInstance;
-
 		public function getIsSingleton() :bool;
 
 		public function getSetters() :array;
