@@ -3,11 +3,8 @@
 namespace FcPhp\Di\Facades
 {
 	use FcPhp\Di\Di;
-
-	use FcPhp\Di\Factories\DiFactory;
 	use FcPhp\Di\Factories\ContainerFactory;
 	use FcPhp\Di\Factories\InstanceFactory;
-	
 	use FcPhp\Di\Interfaces\IDi;
 	use FcPhp\Di\Interfaces\IContainer;
 
