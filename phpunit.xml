@@ -7,13 +7,7 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">./src/Exceptions/</directory>
-            <directory suffix=".php">./src/Factories/</directory>
-            <directory suffix=".php">./src/Traits/</directory>
-            <directory suffix=".php">./src/Facades/</directory>
-            <file suffix=".php">./src/Di.php</file>
-            <file suffix=".php">./src/Instance.php</file>
-            <file suffix=".php">./src/Container.php</file>
+            <directory suffix=".php">./src/</directory>
         </whitelist>
         <blacklist>
             <!-- <directory suffix=".php">./src/Facades/</directory> -->
