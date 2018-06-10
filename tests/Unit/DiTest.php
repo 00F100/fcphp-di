@@ -17,7 +17,6 @@ class DiTest extends Mock
 	public function setUp()
 	{
 		$this->di = new Di($this->getContainerMock(), $this->getInstanceMock(), true);
-		// $this->di = new Di(new ContainerFactory(), new InstanceFactory(), true);
 	}
 
 
@@ -63,7 +62,7 @@ class DiTest extends Mock
 				$this->assertEquals($setters, []);
 				$this->assertTrue($instance instanceof IInstance);
 				$this->assertTrue($container instanceof IContainer);
-				// $this->assertTrue($class instanceof MockCallback);
+				$this->assertTrue($class instanceof MockCallback);
 			},
 		]);
 		$this->di->event('afterGet', function(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container) {
@@ -74,8 +73,7 @@ class DiTest extends Mock
 			$this->assertTrue($container instanceof IContainer);
 		});
 		$this->di->set('MockCallback', 'MockCallback');
-		// $this->assertTrue($this->di->get('MockCallback') instanceof IContainer);
-		// d($this->di->instances);
+		$this->assertTrue($this->di->get('MockCallback') instanceof IContainer);
 		$this->assertTrue($this->di->make('MockCallback') instanceof MockCallback);
 	}
 
@@ -106,11 +104,11 @@ class DiTest extends Mock
 		$this->assertTrue($this->di->getNonSingleton('ClassTeste') instanceof IContainer);
 	}
 
-	// public function testMake()
-	// {
-		// $this->di->set('ClassTeste', 'MockCallback');
-		// $this->assertTrue($this->di->make('ClassTeste') instanceof MockCallback);
-	// }
+	public function testMake()
+	{
+		$this->di->set('ClassTeste', 'MockCallback');
+		$this->assertTrue($this->di->make('ClassTeste') instanceof MockCallback);
+	}
 
 	public function testGetInstanceOfDi()
 	{
@@ -157,7 +155,7 @@ class DiTest extends Mock
 		
 		$this->di->set('ClassTeste', 'MockCallback');
 		$class = $this->di->make('ClassTeste');
-		// $this->assertTrue($class instanceof MockCallback);
+		$this->assertTrue($class instanceof MockCallback);
 		$class->param = 'value1';
 		$this->di->get('ClassTeste', [], ['setFoo' => 'bar'])->getClass();
 	}
