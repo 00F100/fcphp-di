@@ -45,35 +45,41 @@ namespace FcPhp\Di
 						$args[$index] = $value->getClass();
 					}
 				}
-
-				$method = new ReflectionMethod($this->instance->getNamespace(), '__construct');
-				$parameters = $method->getParameters();
-				$params = [];
-				if(count($parameters) > 0) {
-					foreach($parameters as $param) {
-						$params[] = $param->getName();
-					}
-				}
 				$argsClass = [];
-				if(count($params) > 0) {
-					foreach($params as $param) {
-						if(isset($args[$param])) {
-							$argsClass[] = $args[$param];
-						}else{
-							$argsClass[] = null;
+				if(method_exists($this->instance->getNamespace(), '__construct')) {
+					$method = new ReflectionMethod($this->instance->getNamespace(), '__construct');
+					$parameters = $method->getParameters();
+					$params = [];
+					if(count($parameters) > 0) {
+						foreach($parameters as $param) {
+							$params[] = $param->getName();
+						}
+					}
+					if(count($params) > 0) {
+						foreach($params as $param) {
+							if(isset($args[$param])) {
+								$argsClass[] = $args[$param];
+							}else{
+								$argsClass[] = null;
+							}
 						}
 					}
 				}
+				
 				$class = new ReflectionClass($this->instance->getNamespace());
 				$instance = $class->newInstanceArgs($argsClass);
 				$setters = array_merge($this->instance->getSetters(), $this->setters);
 				if(count($setters) > 0) {
 					foreach($setters as $method => $value) {
 						if(method_exists($instance, $method)) {
-							if(!is_array($value))
-								$value = [$value];
-
-							call_user_func_array([$instance, $method], $value);
+							if($value instanceof IContainer) {
+								call_user_func_array([$instance, $method], [$value->getClass()]);
+							}else{
+								if(!is_array($value)) {
+									$value = [$value];
+								}
+								call_user_func_array([$instance, $method], $value);
+							}
 						}
 					}
 				}

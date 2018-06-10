@@ -1,20 +1,20 @@
 <?php
 
-namespace FcPHP\Di\Facades
+namespace FcPhp\Di\Facades
 {
-	use FcPHP\Di\Di;
+	use FcPhp\Di\Di;
 
-	use FcPHP\Di\Factories\DiFactory;
-	use FcPHP\Di\Factories\ContainerFactory;
-	use FcPHP\Di\Factories\InstanceFactory;
+	use FcPhp\Di\Factories\DiFactory;
+	use FcPhp\Di\Factories\ContainerFactory;
+	use FcPhp\Di\Factories\InstanceFactory;
 	
-	use FcPHP\Di\Interfaces\IDi;
+	use FcPhp\Di\Interfaces\IDi;
 	use FcPhp\Di\Interfaces\IContainer;
 
 	class DiFacade
 	{
 		/**
-		 * @var FcPHP\Di\Facades\DiFacade
+		 * @var FcPhp\Di\Facades\DiFacade
 		 */
 		private static $instance;
 
@@ -22,12 +22,12 @@ namespace FcPHP\Di\Facades
 		 * Method to create and return instance of Di Facade
 		 *
 		 * @param bool $register Register Containers
-		 * @return FcPHP\Di\Facades\DiFacade
+		 * @return FcPhp\Di\Facades\DiFacade
 		 */
 		public static function getInstance(bool $register = false)
 		{
 			if(!self::$instance instanceof DiFacade) {
-				self::$instance = new DiFacade(new Di(new DiFactory(), new ContainerFactory(), new InstanceFactory(), $register));
+				self::$instance = new DiFacade(new Di(new ContainerFactory(), new InstanceFactory(), $register));
 			}
 			return self::$instance;
 		}
@@ -35,7 +35,7 @@ namespace FcPHP\Di\Facades
 		/**
 		 * Method to construct instance
 		 *
-		 * @param FcPHP\Di\Interfaces\IDi $di Instance of Di
+		 * @param FcPhp\Di\Interfaces\IDi $di Instance of Di
 		 */
 		public function __construct(IDi $di)
 		{
@@ -100,7 +100,7 @@ namespace FcPHP\Di\Facades
 		 */
 		public function event($eventName, object $callback = null) :void
 		{
-			return $this->di->event($eventName, $callback);
+			$this->di->event($eventName, $callback);
 		}
 	}
 }
