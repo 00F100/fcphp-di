@@ -7,7 +7,35 @@ namespace FcPhp\Di\Traits
 
 	trait DiEvents
 	{
-		
+		/**
+		 * @var object 
+		 */
+		private $beforeSet;
+
+		/**
+		 * @var object 
+		 */
+		private $afterSet;
+
+		/**
+		 * @var object 
+		 */
+		private $beforeGet;
+
+		/**
+		 * @var object 
+		 */
+		private $afterGet;
+
+		/**
+		 * @var object 
+		 */
+		private $beforeMake;
+
+		/**
+		 * @var object 
+		 */
+		private $afterMake;
 
 		/**
 		 * Method to event before execute set()
@@ -146,7 +174,7 @@ namespace FcPhp\Di\Traits
 		 */
 		private function _afterSet(string $id, string $namespace, array $args, array $setters, bool $singleton, ?IInstance $instance)
 		{
-			$event = $this->beforeSet;
+			$event = $this->afterSet;
 			if(gettype($event) == 'object') {
 				$event($id, $namespace, $args, $setters, $singleton, $instance);
 			}

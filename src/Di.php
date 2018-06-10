@@ -47,36 +47,6 @@ namespace FcPhp\Di
 		private $instanceFactory;
 
 		/**
-		 * @var object 
-		 */
-		private $beforeSet;
-
-		/**
-		 * @var object 
-		 */
-		private $afterSet;
-
-		/**
-		 * @var object 
-		 */
-		private $beforeGet;
-
-		/**
-		 * @var object 
-		 */
-		private $afterGet;
-
-		/**
-		 * @var object 
-		 */
-		private $beforeMake;
-
-		/**
-		 * @var object 
-		 */
-		private $afterMake;
-
-		/**
 		 * Return new instance of Di
 		 *
 		 * @param FcPhp\Di\Interfaces\IDiFactory $diFactory Instance of Di Factory

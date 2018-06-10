@@ -55,7 +55,7 @@ namespace FcPhp\Di\Traits
 			if(!$instance->getIsSingleton()) {
 				$container = $this->containerFactory->getInstance($instance, $args, $setters);
 				$this->registerContainer($container);
-				$this->_afterGet($id, $args, $setters, $instance, $container);
+				$this->afterGet($id, $args, $setters, $instance, $container);
 				return $container;
 			}
 			$checksum = $this->_getChecksum($id, $args);
@@ -67,7 +67,7 @@ namespace FcPhp\Di\Traits
 					throw new ClassBusy("This class has already been instantiated, can not be its modified constructor", 500);
 				}
 			}
-			$this->_afterGet($id, $args, $setters, $instance, $this->containers[$checksum]);
+			$this->afterGet($id, $args, $setters, $instance, $this->containers[$checksum]);
 			return $this->containers[$checksum];
 		}
 

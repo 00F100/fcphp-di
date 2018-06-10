@@ -18,7 +18,7 @@ Class Mock extends TestCase
 					->expects($this->any())
 					->method('getClass')
 					->will($this->returnCallback(function() {
-						return new \StdClass();
+						return new MockCallback();
 					}));
 
 				return $container;
@@ -64,5 +64,13 @@ Class Mock extends TestCase
 				return $instance;
 			}));
 		return $instanceFactory;
+	}
+}
+
+class MockCallback
+{
+	public function __construct()
+	{
+
 	}
 }
