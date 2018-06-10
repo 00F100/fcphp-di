@@ -5,7 +5,6 @@ namespace FcPhp\Di\Traits
 	use FcPhp\Di\Interfaces\IDi;
 	use FcPhp\Di\Interfaces\IContainer;
 	use FcPhp\Di\Exceptions\InstanceNotFound;
-	use FcPhp\Di\Exceptions\ContainerNotFound;
 	use FcPhp\Di\Exceptions\ClassBusy;
 
 	trait DiCore

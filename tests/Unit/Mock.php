@@ -69,8 +69,25 @@ Class Mock extends TestCase
 
 class MockCallback
 {
+	public $args;
 	public function __construct()
 	{
+		$this->args = func_get_args();
+	}
+}
 
+class MockCallbackParams
+{
+	public $args;
+	public $test;
+
+	public function __construct($value)
+	{
+		$this->args = $value;
+	}
+
+	public function setTest($value)
+	{
+		$this->test = $value;
 	}
 }
