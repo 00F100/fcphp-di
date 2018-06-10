@@ -47,6 +47,11 @@ namespace FcPhp\Di
 		private $instanceFactory;
 
 		/**
+		 * @var string Version Di
+		 */
+		private $version = '0.1.1';
+
+		/**
 		 * Return new instance of Di
 		 *
 		 * @param FcPhp\Di\Interfaces\IDiFactory $diFactory Instance of Di Factory
