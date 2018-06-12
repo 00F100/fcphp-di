@@ -152,7 +152,6 @@ class DiTest extends Mock
      */
 	public function testMakeInstanceErrorClassBosy()
 	{
-		
 		$this->di->set('ClassTeste', 'MockCallback');
 		$class = $this->di->make('ClassTeste');
 		$this->assertTrue($class instanceof MockCallback);
@@ -160,4 +159,9 @@ class DiTest extends Mock
 		$this->di->get('ClassTeste', [], ['setFoo' => 'bar'])->getClass();
 	}
 
+	public function testSetSetters()
+	{
+		$this->di->set('ClassMock', 'MockCallbackParams');
+		$this->assertTrue($this->di->setter('ClassMock', ['setTest' => 'value']) instanceof IDi);
+	}
 }

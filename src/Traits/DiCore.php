@@ -107,6 +107,22 @@ namespace FcPhp\Di\Traits
 		}
 
 		/**
+		 * Method to configure setters to instance
+		 *
+		 * @param string $id Identify instance
+		 * @param array $setters Define setters to instance
+		 * @return FcPhp\Di\Interfaces\IDi
+		 */
+		private function _setter(string $id, array $setters) :IDi
+		{
+			$instance = $this->instances[$id];
+			$instanceSetters = $instance->getSetters();
+			$instanceSetters = array_merge($instanceSetters, $setters);
+			$instance->setSetters($setters);
+			return $this;
+		}
+
+		/**
 		 * Method to generate new checksum
 		 *
 		 * @return string

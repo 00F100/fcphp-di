@@ -15,5 +15,7 @@ namespace FcPhp\Di\Interfaces
 		public function getIsSingleton() :bool;
 
 		public function getSetters() :array;
+		
+		public function setSetters(array $setters) :IInstance;
 	}
 }

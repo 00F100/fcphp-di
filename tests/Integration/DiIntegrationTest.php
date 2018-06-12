@@ -162,4 +162,11 @@ class DiIntegrationTest extends Mock
 		$this->assertTrue($this->di->get('MockCallback') instanceof IContainer);
 		$this->assertTrue($this->di->make('MockCallback') instanceof \MockCallback);
 	}
+
+	public function testSettersMethod()
+	{
+		$this->di->set('MockCallback', '\MockCallback');
+		$this->di->setter('MockCallback', ['setTest' => 'value']);
+
+	}
 }

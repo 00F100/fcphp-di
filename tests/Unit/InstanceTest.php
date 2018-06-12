@@ -50,4 +50,11 @@ class InstanceTest extends Mock
 		$this->assertEquals($this->instance->getIsSingleton(), true);
 	}
 
+	public function testSetSetters()
+	{
+		$setters = ['method' => 'value'];
+		$this->instance->setSetters($setters);
+		$this->assertEquals($this->instance->getSetters(), $setters);
+	}
+
 }

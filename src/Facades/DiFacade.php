@@ -66,6 +66,18 @@ namespace FcPhp\Di\Facades
 		}
 
 		/**
+		 * Method to configure setters to class
+		 *
+		 * @param string $id Identify instance
+		 * @param array $setters Setters to class
+		 * @return FcPhp\Di\Interfaces\IDi
+		 */
+		public function setter(string $id, array $setters) :IDi
+		{
+			return $this->di->setter($id, $setters);
+		}
+
+		/**
 		 * Method to get instance of Container
 		 *
 		 * @param string $id Identify of instance

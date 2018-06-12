@@ -37,6 +37,6 @@ namespace FcPhp\Di\Interfaces
 
 		public function afterMake(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container, $class) :void;
 
-		
+		public function setter(string $id, array $setters) :IDi;
 	}
 }

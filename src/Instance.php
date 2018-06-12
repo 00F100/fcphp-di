@@ -21,6 +21,9 @@ namespace FcPhp\Di
 		 */
 		private $singleton = true;
 
+		/**
+		 * @var array $setters
+		 */
 		private $setters = [];
 
 		/**
@@ -79,5 +82,15 @@ namespace FcPhp\Di
 			return $this->setters;
 		}
 
+		/**
+		 * Method to configure setters
+		 *
+		 * @return FcPhp\Di\Interfaces\IInstance
+		 */
+		public function setSetters(array $setters) :IInstance
+		{
+			$this->setters = $setters;
+			return $this;
+		}
 	}
 }
