@@ -32,15 +32,6 @@ $di->set(string $id, string $namespace, array $args = [], array $setters = [], b
 $di->get(string $id, array $args = [], array $setters = []);
 
 /**
- * Method instance of class
- *
- * @param string $id Identify of instance
- * @param array $args Args to construct instance
- * @return mixed
- */
-$di->make(string $id, array $args = [], array $setters = []);
-
-/**
  * Method to configure setters to class
  *
  * @param string $id Identify instance
@@ -48,6 +39,15 @@ $di->make(string $id, array $args = [], array $setters = []);
  * @return FcPhp\Di\Interfaces\IDi
  */
 $di->setter(string $id, array $setters);
+
+/**
+ * Method instance of class
+ *
+ * @param string $id Identify of instance
+ * @param array $args Args to construct instance
+ * @return mixed
+ */
+$di->make(string $id, array $args = [], array $setters = []);
 ```
 
 ## Examples
