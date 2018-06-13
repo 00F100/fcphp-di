@@ -25,7 +25,7 @@ class DiIntegrationTest extends Mock
 
 	public function testIntance()
 	{
-		$this->assertTrue($this->di instanceof DiFacade);
+		$this->assertTrue($this->di instanceof IDi);
 	}
 
 	public function testSetGet()
@@ -56,7 +56,7 @@ class DiIntegrationTest extends Mock
 
 	public function testSetNonSinglet()
 	{	
-		$this->di->setNonSingleton('TestClass', '\MockCallback');
+		$this->assertTrue($this->di->setNonSingleton('TestClass', '\MockCallback') instanceof IDi);
 	}
 
 	public function testInjectDependency()
@@ -166,7 +166,7 @@ class DiIntegrationTest extends Mock
 	public function testSettersMethod()
 	{
 		$this->di->set('MockCallback', '\MockCallback');
-		$this->di->setter('MockCallback', ['setTest' => 'value']);
+		$this->assertTrue($this->di->setter('MockCallback', ['setTest' => 'value']) instanceof IDI);
 
 	}
 }
