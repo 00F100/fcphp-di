@@ -49,7 +49,7 @@ namespace FcPhp\Di
 		/**
 		 * @var string Version Di
 		 */
-		private $version = '0.1.1';
+		private $version = '0.2.1';
 
 		/**
 		 * Return new instance of Di
