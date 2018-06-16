@@ -2,7 +2,7 @@
 
 Package to manage dependencies of project.
 
-[![Build Status](https://travis-ci.org/00F100/fcphp-di.svg?branch=master)](https://travis-ci.org/00F100/fcphp-di) [![codecov](https://codecov.io/gh/00F100/fcphp-di/branch/master/graph/badge.svg)](https://codecov.io/gh/00F100/fcphp-di)
+[![Build Status](https://travis-ci.org/00F100/fcphp-di.svg?branch=master)](https://travis-ci.org/00F100/fcphp-di) [![codecov](https://codecov.io/gh/00F100/fcphp-di/branch/master/graph/badge.svg)](https://codecov.io/gh/00F100/fcphp-di) [![Total Downloads](https://poser.pugx.org/00F100/fcphp-di/downloads)](https://packagist.org/packages/00F100/fcphp-di)
 
 ## How to install
 
