@@ -21,9 +21,9 @@ namespace FcPhp\Di\Facades
 		 * @param bool $register Register Containers
 		 * @return FcPhp\Di\Facades\DiFacade
 		 */
-		public static function getInstance(bool $register = false) :Idi
+		public static function getInstance(bool $register = false) :IDi
 		{
-			if(!self::$instance instanceof DiFacade) {
+			if(!self::$instance instanceof IDi) {
 				self::$instance = new Di(new ContainerFactory(), new InstanceFactory(), $register);
 			}
 			return self::$instance;
