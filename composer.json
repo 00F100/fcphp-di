@@ -1,7 +1,7 @@
 {
     "name": "00f100/fcphp-di",
     "type": "package",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "Dependency Injection for FcPHP",
     "keywords": ["dependency", "injection", "di", "php", "fcphp"],
     "homepage": "https://github.com/00f100/fcphp-di",
