@@ -169,4 +169,10 @@ class DiIntegrationTest extends Mock
 		$this->assertTrue($this->di->setter('MockCallback', ['setTest' => 'value']) instanceof IDI);
 
 	}
+
+    public function testHas()
+    {
+        $this->di->set('MockCallback', '\MockCallback');
+        $this->assertTrue($this->di->has('MockCallback'));
+    }
 }

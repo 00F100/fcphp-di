@@ -134,18 +134,29 @@ namespace FcPhp\Di
 			return $this->_get($id, $args, $setters);
 		}
 
-		/**
-		 * Method to return new instance non singleton of class
-		 *
-		 * @param string $id Identify of instance
-		 * @param array $args Args to construct class
-		 * @param array $setters Setters to class
-		 * @return FcPhp\Di\Interfaces\IContainer
-		 */
-		public function getNonSingleton(string $id, array $args = [], array $setters = []) :IContainer
-		{
-			return $this->_getNonSingleton($id, $args, $setters);
-		}
+        /**
+         * Method to return new instance non singleton of class
+         *
+         * @param string $id Identify of instance
+         * @param array $args Args to construct class
+         * @param array $setters Setters to class
+         * @return FcPhp\Di\Interfaces\IContainer
+         */
+        public function getNonSingleton(string $id, array $args = [], array $setters = []) :IContainer
+        {
+            return $this->_getNonSingleton($id, $args, $setters);
+        }
+
+        /**
+         * Method to verify if instance exists
+         *
+         * @param string $id Identify of instance
+         * @return bool
+         */
+        public function has(string $id) :bool
+        {
+            return $this->_has($id);
+        }
 
 		/**
 		 * Method to make new instance of class

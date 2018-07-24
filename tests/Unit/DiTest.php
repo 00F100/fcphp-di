@@ -164,4 +164,10 @@ class DiTest extends Mock
 		$this->di->set('ClassMock', 'MockCallbackParams');
 		$this->assertTrue($this->di->setter('ClassMock', ['setTest' => 'value']) instanceof IDi);
 	}
+
+    public function testHas()
+    {
+        $this->di->set('ClassMock', 'MockCallbackParams');
+        $this->assertTrue($this->di->has('ClassMock'));
+    }
 }
