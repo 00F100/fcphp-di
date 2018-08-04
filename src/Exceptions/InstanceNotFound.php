@@ -2,10 +2,10 @@
 
 namespace FcPHP\Di\Exceptions
 {
-	use Exception;
-	
-	class InstanceNotFound extends Exception
-	{
+    use Exception;
+    
+    class InstanceNotFound extends Exception
+    {
 
-	}
+    }
 }

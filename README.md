@@ -14,9 +14,9 @@ $ composer require 00f100/fcphp-di
 or add in composer.json
 ```json
 {
-	"require": {
-		"00f100/fcphp-di": "*"
-	}
+    "require": {
+        "00f100/fcphp-di": "*"
+    }
 }
 ```
 
@@ -78,25 +78,25 @@ $di = DiFacade::getInstance();
 
 /*
 namespace Namespace\To {
-	class Example {
-		public $foo;
-		private $anotherFoo;
-		public function __construct(string $foo) {
-			$this->foo = $foo;
-		}
-		public function setAnotherFoo($foo) {
-			$this->anotherFoo = $foo;
-		}
-		public functio getAnotherFoo() {
-			return $this->anotherFoo;
-		}
-	}
-	class ExampleBar {
-		public $example;
-		__construct(Example $example) {
-			$this->example = $example;
-		}
-	}
+    class Example {
+        public $foo;
+        private $anotherFoo;
+        public function __construct(string $foo) {
+            $this->foo = $foo;
+        }
+        public function setAnotherFoo($foo) {
+            $this->anotherFoo = $foo;
+        }
+        public functio getAnotherFoo() {
+            return $this->anotherFoo;
+        }
+    }
+    class ExampleBar {
+        public $example;
+        __construct(Example $example) {
+            $this->example = $example;
+        }
+    }
 }
 */
 $di->set('Example', 'Namespace\To\Example', ['foo' => 'bar'], ['setAnotherFoo', 'AnotherBar']);
@@ -121,23 +121,23 @@ use FcPhp\Di\Interfaces\IContainer;
 $di = DiFacade::getInstance();
 
 $di->event([
-	'beforeSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
+    'beforeSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
 
-	},
-	'afterSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton, IInstance $instance) {
+    },
+    'afterSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton, IInstance $instance) {
 
-	},
-	'beforeGet' => function(string $id, array $args, array $setters) {
+    },
+    'beforeGet' => function(string $id, array $args, array $setters) {
 
-	},
-	'afterGet' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container) {
+    },
+    'afterGet' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container) {
 
-	},
-	'beforeMake' => function(string $id, array $args, array $setters) {
+    },
+    'beforeMake' => function(string $id, array $args, array $setters) {
 
-	},
-	'afterMake' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container, $class) {
+    },
+    'afterMake' => function(string $id, array $args, array $setters, IInstance $instance, IContainer $container, $class) {
 
-	}
+    }
 ]);
 ```

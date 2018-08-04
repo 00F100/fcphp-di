@@ -7,16 +7,16 @@ use FcPhp\Di\Facades\DiFacade;
 
 class TestClass
 {
-	private $value;
-	public function setValue($value) {
-		$this->value = $value;
-		return $this;
-	}
+    private $value;
+    public function setValue($value) {
+        $this->value = $value;
+        return $this;
+    }
 
-	public function getValue()
-	{
-		return $this->value;
-	}
+    public function getValue()
+    {
+        return $this->value;
+    }
 }
 
 // Init Di

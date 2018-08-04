@@ -2,10 +2,10 @@
 
 namespace FcPHP\Di\Exceptions
 {
-	use Exception;
-	
-	class ClassBusy extends Exception
-	{
+    use Exception;
+    
+    class ClassBusy extends Exception
+    {
 
-	}
+    }
 }
