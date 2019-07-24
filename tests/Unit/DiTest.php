@@ -19,8 +19,6 @@ class DiTest extends Mock
 		$this->di = new Di($this->getContainerMock(), $this->getInstanceMock(), true);
 	}
 
-
-
 	public function testEvents()
 	{
 		$this->di->event([
@@ -64,6 +62,21 @@ class DiTest extends Mock
 				$this->assertTrue($container instanceof IContainer);
 				$this->assertTrue($class instanceof MockCallback);
 			},
+            'beforeOverwrite' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
+                $this->assertEquals($id, 'MockCallback');
+                $this->assertEquals($namespace, 'MockCallback');
+                $this->assertEquals($args, []);
+                $this->assertEquals($setters, []);
+                $this->assertEquals($singleton, true);
+            },
+            'afterOverwrite' => function(string $id, string $namespace, array $args, array $setters, bool $singleton, ?IInstance $instance) {
+                $this->assertEquals($id, 'MockCallback');
+                $this->assertEquals($namespace, 'MockCallback');
+                $this->assertEquals($args, []);
+                $this->assertEquals($setters, []);
+                $this->assertEquals($singleton, true);
+                $this->assertTrue($instance instanceof IInstance);
+            }
 		]);
 		$this->di->event('afterGet', function(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container) {
 			$this->assertEquals($id, 'MockCallback');
@@ -72,7 +85,8 @@ class DiTest extends Mock
 			$this->assertTrue($instance instanceof IInstance);
 			$this->assertTrue($container instanceof IContainer);
 		});
-		$this->di->set('MockCallback', 'MockCallback');
+        $this->di->set('MockCallback', 'MockCallback');
+		$this->di->overwrite('MockCallback', 'MockCallback');
 		$this->assertTrue($this->di->get('MockCallback') instanceof IContainer);
 		$this->assertTrue($this->di->make('MockCallback') instanceof MockCallback);
 	}
@@ -169,5 +183,10 @@ class DiTest extends Mock
     {
         $this->di->set('ClassMock', 'MockCallbackParams');
         $this->assertTrue($this->di->has('ClassMock'));
+    }
+
+    public function testOverwrite()
+    {
+        $this->assertInstanceOf(IDi::class, $this->di->overwrite('ClassMock', 'MockCallbackParams'));
     }
 }

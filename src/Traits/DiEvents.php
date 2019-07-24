@@ -38,6 +38,16 @@ namespace FcPhp\Di\Traits
         private $afterMake;
 
         /**
+         * @var object 
+         */
+        private $beforeOverwrite;
+
+        /**
+         * @var object 
+         */
+        private $afterOverwrite;
+
+        /**
          * Method to event before execute set()
          *
          * @param string $id Identify of instance
@@ -123,6 +133,43 @@ namespace FcPhp\Di\Traits
         public function afterMake(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container, $class) :void
         {
             $this->_afterMake($id, $args, $setters, $instance, $container, $class);
+        }
+
+        /**
+         * Method to event before execute overwrite()
+         *
+         * @param string $id Identify of instance
+         * @param string $namespace Namespace of class
+         * @param array $args Args to construct instance
+         * @param array $setters Setters to class
+         * @param bool $singleton If this class is singleton
+         * @return void
+         */
+        public function beforeOverwrite(string $id, string $namespace, array $args, array $setters, bool $singleton) :void
+        {
+            $event = $this->beforeOverwrite;
+            if(gettype($event) == 'object') {
+                $event($id, $namespace, $args, $setters, $singleton);
+            }
+        }
+
+        /**
+         * Method to event after execute overwrite()
+         *
+         * @param string $id Identify of instance
+         * @param string $namespace Namespace of class
+         * @param array $args Args to construct instance
+         * @param array $setters Setters to class
+         * @param bool $singleton If this class is singleton
+         * @param FcPhp\Di\Interfaces\IInstance $instance Instance config of class
+         * @return void
+         */
+        public function afterOverwrite(string $id, string $namespace, array $args, array $setters, bool $singleton, ?IInstance $instance) :void
+        {
+            $event = $this->afterOverwrite;
+            if(gettype($event) == 'object') {
+                $event($id, $namespace, $args, $setters, $singleton, $instance);
+            }
         }
 
         /**

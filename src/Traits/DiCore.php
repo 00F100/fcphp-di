@@ -107,6 +107,23 @@ namespace FcPhp\Di\Traits
         }
 
         /**
+         * Method to overwrite instance before make
+         *
+         * @param string $id Identify instance
+         * @param string $namespace Namespace of class
+         * @param array $args Args to construct class
+         * @param array $setters Setters to class
+         * @return FcPhp\Di\Interfaces\IDi
+         */
+        private function _overwrite(string $id, string $namespace, array $args = [], array $setters = [], bool $singleton = true) :IDi
+        {
+            $this->beforeOverwrite($id, $namespace, $args, $setters, $singleton);
+            $this->instances[$id] = $this->instanceFactory->getInstance($namespace, $args, $setters, $singleton);
+            $this->afterOverwrite($id, $namespace, $args, $setters, $singleton, $this->instances[$id]);
+            return $this;
+        }
+
+        /**
          * Method to configure setters to instance
          *
          * @param string $id Identify instance

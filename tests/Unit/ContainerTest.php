@@ -7,32 +7,30 @@ require_once('Mock.php');
 
 class ContainerTest extends Mock
 {
-	public $container;
-	// public $instance;
-	// public $args;
-	// public $setters;
+    private $instance;
+	private $container;
 
 	public function setUp()
 	{
-		$instance = $this->createMock('FcPhp\Di\Interfaces\IInstance');
+		$this->instance = $this->createMock('FcPhp\Di\Interfaces\IInstance');
 
-		$instance
+		$this->instance
 			->expects($this->any())
 			->method('getArgs')
 			->will($this->returnValue([]));
 
-		$instance
+		$this->instance
 			->expects($this->any())
 			->method('getSetters')
 			->will($this->returnValue([]));
 
-		$instance
+		$this->instance
 			->expects($this->any())
 			->method('getNamespace')
 			->will($this->returnValue('\MockCallbackParams'));
 
-		$container = new Container($instance, ['value' => 'param'], ['setTest' => 'value']);
-		$this->container = new Container($instance, ['value' => $container], ['setTest' => $container]);
+		$container = new Container($this->instance, ['value' => 'param'], ['setTest' => 'value']);
+		$this->container = new Container($this->instance, ['value' => $container], ['setTest' => $container]);
 	}
 
 	public function testInstance()
@@ -44,5 +42,12 @@ class ContainerTest extends Mock
 	{
 		$this->assertTrue($this->container->getClass() instanceof \MockCallbackParams);
 	}
+
+    public function testArgsNull()
+    {
+        $container = new Container($this->instance);
+        $class = $container->getClass();
+        $this->assertNull($class->GetArgs());
+    }
 
 }

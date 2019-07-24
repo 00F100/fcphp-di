@@ -90,4 +90,9 @@ class MockCallbackParams
 	{
 		$this->test = $value;
 	}
+
+    public function getArgs()
+    {
+        return $this->args;
+    }
 }

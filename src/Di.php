@@ -91,8 +91,7 @@ namespace FcPhp\Di
          */
         public function set(string $id, string $namespace, array $args = [], array $setters = [], bool $singleton = true) :IDi
         {
-            $this->_set($id, $namespace, $args, $setters, $singleton);
-            return $this;
+            return $this->_set($id, $namespace, $args, $setters, $singleton);
         }
 
         /**
@@ -145,6 +144,20 @@ namespace FcPhp\Di
         public function getNonSingleton(string $id, array $args = [], array $setters = []) :IContainer
         {
             return $this->_getNonSingleton($id, $args, $setters);
+        }
+
+        /**
+         * Method to overwrite instance before make
+         *
+         * @param string $id Identify instance
+         * @param string $namespace Namespace of class
+         * @param array $args Args to construct class
+         * @param array $setters Setters to class
+         * @return FcPhp\Di\Interfaces\IDi
+         */
+        public function overwrite(string $id, string $namespace, array $args = [], array $setters = []) :IDi
+        {
+            return $this->_overwrite($id, $namespace, $args, $setters);
         }
 
         /**
