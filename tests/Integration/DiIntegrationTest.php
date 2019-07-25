@@ -107,62 +107,6 @@ class DiIntegrationTest extends Mock
 		$this->di->get('ClassLocalChange', [], ['setTest' => 'value']);
 	}
 
-	public function testEvents()
-	{
-		$this->di->event([
-			'beforeSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
-				$this->assertEquals($id, 'MockCallback');
-				$this->assertEquals($namespace, '\MockCallback');
-				$this->assertEquals($args, []);
-				$this->assertEquals($setters, []);
-				$this->assertEquals($singleton, true);
-			},
-			'afterSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton, ?IInstance $instance) {
-				$this->assertEquals($id, 'MockCallback');
-				$this->assertEquals($namespace, '\MockCallback');
-				$this->assertEquals($args, []);
-				$this->assertEquals($setters, []);
-				$this->assertEquals($singleton, true);
-				$this->assertTrue($instance instanceof IInstance);
-			},
-			'beforeGet' => function(string $id, array $args, array $setters) {
-				$this->assertEquals($id, 'MockCallback');
-				$this->assertEquals($args, []);
-				$this->assertEquals($setters, []);
-			},
-			'afterGet' => function(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container) {
-				$this->assertEquals($id, 'MockCallback');
-				$this->assertEquals($args, []);
-				$this->assertEquals($setters, []);
-				$this->assertTrue($instance instanceof IInstance);
-				$this->assertTrue($container instanceof IContainer);
-			},
-			'beforeMake' => function(string $id, array $args, array $setters) {
-				$this->assertEquals($id, 'MockCallback');
-				$this->assertEquals($args, []);
-				$this->assertEquals($setters, []);
-			},
-			'afterMake' => function(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container, $class) {
-				$this->assertEquals($id, 'MockCallback');
-				$this->assertEquals($args, []);
-				$this->assertEquals($setters, []);
-				$this->assertTrue($instance instanceof IInstance);
-				$this->assertTrue($container instanceof IContainer);
-				$this->assertTrue($class instanceof \MockCallback);
-			},
-		]);
-		$this->di->event('afterGet', function(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container) {
-			$this->assertEquals($id, 'MockCallback');
-			$this->assertEquals($args, []);
-			$this->assertEquals($setters, []);
-			$this->assertTrue($instance instanceof IInstance);
-			$this->assertTrue($container instanceof IContainer);
-		});
-		$this->di->set('MockCallback', '\MockCallback');
-		$this->assertTrue($this->di->get('MockCallback') instanceof IContainer);
-		$this->assertTrue($this->di->make('MockCallback') instanceof \MockCallback);
-	}
-
 	public function testSettersMethod()
 	{
 		$this->di->set('MockCallback', '\MockCallback');
@@ -174,5 +118,90 @@ class DiIntegrationTest extends Mock
     {
         $this->di->set('MockCallback', '\MockCallback');
         $this->assertTrue($this->di->has('MockCallback'));
+    }
+
+    public function testOverwriteArgs()
+    {
+        $this->di->set('MockCallbackParams', '\MockCallbackParams', ['value' => 12345]);
+        $this->di->overwrite('MockCallbackParams', '\MockCallbackParams', ['value' => 'overwrite']);
+        $this->assertEquals('overwrite', $this->di->make('MockCallbackParams')->getArgs());
+    }
+
+    public function testContainerNullParam()
+    {
+        $this->di->set('MockCallbackParams2', '\MockCallbackParams', ['value' => null]);
+        $this->assertNull($this->di->make('MockCallbackParams2')->getArgs());
+    }
+
+    public function testEvents()
+    {
+        $this->di->event([
+            'beforeSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
+                $this->assertEquals($id, 'MockCallback');
+                $this->assertEquals($namespace, '\MockCallback');
+                $this->assertEquals($args, []);
+                $this->assertEquals($setters, []);
+                $this->assertEquals($singleton, true);
+            },
+            'afterSet' => function(string $id, string $namespace, array $args, array $setters, bool $singleton, ?IInstance $instance) {
+                $this->assertEquals($id, 'MockCallback');
+                $this->assertEquals($namespace, '\MockCallback');
+                $this->assertEquals($args, []);
+                $this->assertEquals($setters, []);
+                $this->assertEquals($singleton, true);
+                $this->assertTrue($instance instanceof IInstance);
+            },
+            'beforeGet' => function(string $id, array $args, array $setters) {
+                $this->assertEquals($id, 'MockCallback');
+                $this->assertEquals($args, []);
+                $this->assertEquals($setters, []);
+            },
+            'afterGet' => function(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container) {
+                $this->assertEquals($id, 'MockCallback');
+                $this->assertEquals($args, []);
+                $this->assertEquals($setters, []);
+                $this->assertTrue($instance instanceof IInstance);
+                $this->assertTrue($container instanceof IContainer);
+            },
+            'beforeMake' => function(string $id, array $args, array $setters) {
+                $this->assertEquals($id, 'MockCallback');
+                $this->assertEquals($args, []);
+                $this->assertEquals($setters, []);
+            },
+            'afterMake' => function(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container, $class) {
+                $this->assertEquals($id, 'MockCallback');
+                $this->assertEquals($args, []);
+                $this->assertEquals($setters, []);
+                $this->assertTrue($instance instanceof IInstance);
+                $this->assertTrue($container instanceof IContainer);
+                $this->assertTrue($class instanceof \MockCallback);
+            },
+            'beforeOverwrite' => function(string $id, string $namespace, array $args, array $setters, bool $singleton) {
+                $this->assertEquals($id, 'MockCallback');
+                $this->assertEquals($namespace, '\MockCallback');
+                $this->assertEquals($args, []);
+                $this->assertEquals($setters, []);
+                $this->assertEquals($singleton, true);
+            },
+            'afterOverwrite' => function(string $id, string $namespace, array $args, array $setters, bool $singleton, ?IInstance $instance) {
+                $this->assertEquals($id, 'MockCallback');
+                $this->assertEquals($namespace, '\MockCallback');
+                $this->assertEquals($args, []);
+                $this->assertEquals($setters, []);
+                $this->assertEquals($singleton, true);
+                $this->assertTrue($instance instanceof IInstance);
+            }
+        ]);
+        $this->di->event('afterGet', function(string $id, array $args, array $setters, ?IInstance $instance, ?IContainer $container) {
+            $this->assertEquals($id, 'MockCallback');
+            $this->assertEquals($args, []);
+            $this->assertEquals($setters, []);
+            $this->assertTrue($instance instanceof IInstance);
+            $this->assertTrue($container instanceof IContainer);
+        });
+        $this->di->set('MockCallback', '\MockCallback');
+        $this->di->overwrite('MockCallback', '\MockCallback');
+        $this->assertTrue($this->di->get('MockCallback') instanceof IContainer);
+        $this->assertTrue($this->di->make('MockCallback') instanceof \MockCallback);
     }
 }
