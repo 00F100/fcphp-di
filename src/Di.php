@@ -155,9 +155,9 @@ namespace FcPhp\Di
          * @param array $setters Setters to class
          * @return FcPhp\Di\Interfaces\IDi
          */
-        public function overwrite(string $id, string $namespace, array $args = [], array $setters = []) :IDi
+        public function overwrite(string $id, string $namespace, array $args = [], array $setters = [], bool $singleton = true) :IDi
         {
-            return $this->_overwrite($id, $namespace, $args, $setters);
+            return $this->_overwrite($id, $namespace, $args, $setters, $singleton);
         }
 
         /**
