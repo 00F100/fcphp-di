@@ -25,11 +25,10 @@ namespace FcPhp\Di\Traits
             if(!$instance->getIsSingleton()) {
                 $container = $this->_getNonSingleton($id, $args, $setters);
             }else{
-                $checksum = $this->_getChecksum($id, $args);
-                if(!isset($this->containers[$checksum])) {
-                    $this->containers[$checksum] = $this->_get($id, $args, $setters);
+                if(!isset($this->containers[$id])) {
+                    $this->containers[$id] = $this->_get($id, $args, $setters);
                 }
-                $container = $this->containers[$checksum];
+                $container = $this->containers[$id];
             }
             $class = $container->getClass();
             $this->afterMake($id, $args, $setters, $instance, $container, $class);
@@ -57,17 +56,16 @@ namespace FcPhp\Di\Traits
                 $this->afterGet($id, $args, $setters, $instance, $container);
                 return $container;
             }
-            $checksum = $this->_getChecksum($id, $args);
-            if(!isset($this->containers[$checksum])) {
-                $this->containers[$checksum] = $this->containerFactory->getInstance($instance, $args, $setters);
-                $this->registerContainer($this->containers[$checksum]);
+            if(!isset($this->containers[$id])) {
+                $this->containers[$id] = $this->containerFactory->getInstance($instance, $args, $setters);
+                $this->registerContainer($this->containers[$id]);
             }else{
                 if(count($args) > 0 || count($setters) > 0) {
                     throw new ClassBusy("This class has already been instantiated, can not be its modified constructor", 500);
                 }
             }
-            $this->afterGet($id, $args, $setters, $instance, $this->containers[$checksum]);
-            return $this->containers[$checksum];
+            $this->afterGet($id, $args, $setters, $instance, $this->containers[$id]);
+            return $this->containers[$id];
         }
 
         /**
@@ -148,16 +146,6 @@ namespace FcPhp\Di\Traits
         private function _has(string $id) :bool
         {
             return isset($this->instances[$id]);
-        }
-
-        /**
-         * Method to generate new checksum
-         *
-         * @return string
-         */
-        private function _getChecksum()
-        {
-            return md5(serialize(func_get_args()));
         }
 
         /**

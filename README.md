@@ -40,6 +40,17 @@ $di = DiFacade::getInstance();
 $di->set(string $id, string $namespace, array $args = [], array $setters = [], bool $singleton = true);
 
 /**
+ * Method to overwrite instance before make
+ *
+ * @param string $id Identify instance
+ * @param string $namespace Namespace of class
+ * @param array $args Args to construct class
+ * @param array $setters Setters to class
+ * @return FcPhp\Di\Interfaces\IDi
+ */
+$di->overwrite(string $id, string $namespace, array $args = [], array $setters = []) ;
+
+/**
  * Method to get instance of Container
  *
  * @param string $id Identify of instance
